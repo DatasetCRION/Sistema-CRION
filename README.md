@@ -1,7 +1,7 @@
 # Sistema-CRION
 Sistema CRION facilita na coleta de voto dos usuários e gerar arquivos para avaliação
 
-
+Pre-requisito sistema: Maven Tomcat 7
 
 - Highcharts-6.0.3	=> Para plotar gráficos
 - JSON-java-master	
