@@ -1,0 +1,76 @@
+/**********************************************
+/*      Projeto Crion
+/*
+/* Autor: Vinícius Salgado
+/*
+/* Pré requisitos: Biblioteca LIBSVM
+/**********************************************
+
+Comandos básicos:
+		Comando para criar modelo
+		.\svm-train.exe treinamentoSVM.txt
+
+		Comando para executar predição
+		.\svm-predict.exe teste.txt treinamentoSVM.txt.model output.txt
+
+
+		
+Testes à serem feitos na base DataSetTwitter
+
+Primeiro teste:
+
+Base linear
+.\svm-train.exe -t 0 treinamentoSVM.txt
+Polynomial
+.\svm-train.exe -t 1 treinamentoSVM.txt
+Radial basis
+.\svm-train.exe -t 2 treinamentoSVM.txt
+Sigmod
+.\svm-train.exe -t 3 treinamentoSVM.txt
+
+
+Predição de cada treinamento
+.\svm-predict.exe treinamentoSVM.txt treinamentoSVM.txt.model output.txt
+
+/**
+*
+* .\svm-scale -l -1 -u 1 -s range1 Treino > Treino.scale
+* .\svm-scale -r range1 Precicao > Precicao.scale
+* .\svm-train Treino.scale
+* .\svm-predict Precicao.scale Treino.scale output.txt
+*/
+
+Parametros defeaut
+.\svm-scale -l -1 -u 1 -s range1 treinamentoSVM.txt > treinamentoSVM.txt.scale
+.\svm-scale -r range1 teste.txt > teste.txt.scale
+.\svm-train treinamentoSVM.txt.scale
+.\svm-predict teste.txt.scale treinamentoSVM.txt.scale.model output.txt
+
+
+
+grip.py para a base de teste (Ele contém 5-fold como padrão)
+python grid.py treinamentoSVM.txt.scale
+
+Resulatado do grid.py:
+Valor C  Valor Gama   Accuracy
+0.03125  0.0078125    68.8525
+
+Realizar novo treinamento e teste => *.\svm-train -c Valor C -g Valor Gama treinamentoSVM.txt.scale*
+
+.\svm-train -c 0.03125 -g 0.0078125 treinamentoSVM.txt.scale
+Para linear
+.\svm-train -c 0.03125 -g 0.0078125 -t 0 treinamentoSVM.txt.scale
+
+.\svm-predict treinamentoSVM.txt.scale treinamentoSVM.txt.scale.model output.txt
+
+
+
+
+----------------------
+Iremos usar Radial basis para o teste das outras 
+.\svm-train.exe -t 2 treinamentoSVM.txt
+
+
+Tabela - Falso posivito (Arquivos (Valores vdd)ResultadoVoto.txt > (Valores a serem comparados)output.txt)
+Chamar método ResultadoMatrizConfusao();
+
