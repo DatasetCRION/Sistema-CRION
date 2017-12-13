@@ -66,10 +66,10 @@ public class DataSetTwitter {
 
 //////        ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 //////        configurationBuilder.setDaemonEnabled(true)
-//////                .setOAuthConsumerKey("h6rh8m7wVey64Qw2AYajrBuKD")
-//////                .setOAuthConsumerSecret("Clb8KEuPOikwNT2WCYL9dFtGjmQbvjHkLlDXNbcz68T6uKIlml")
-//////                .setOAuthAccessToken("58221406-a9MRE718Keg2PThjC47xzo4UodoBrC3HzMxRKzUyt")
-//////                .setOAuthAccessTokenSecret("Hw4Ud1MqW8tTW9qINrrnpoIj6U6elefF1vFW9t4Pc6dcb");
+//////                .setOAuthConsumerKey("ADD KEY")
+//////                .setOAuthConsumerSecret("ADD KEY")
+//////                .setOAuthAccessToken("ADD KEY")
+//////                .setOAuthAccessTokenSecret("ADD KEY");
 //////       
 //////         TwitterStream twitterStream = new    TwitterStreamFactory(configurationBuilder.build()).getInstance();
 //////   
