@@ -1,0 +1,40 @@
+<div id="page_content">
+	<div id="page_content_inner">
+
+		<div class="uk-width-medium-9-10 uk-container-center">
+
+			<div class="md-card md-card-single" single-card>
+				<div class="md-card-toolbar">
+					<h3 class="md-card-toolbar-heading-text large">Produtos</h3>
+				</div>
+
+				<div class="md-card-content padding-reset" id="help_content">
+					<table datatable="ng" class="uk-table" dt-instance="dtInstance"
+						dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+						<thead>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in listModeloFranquias" data-uk-modal="{target:'#modalProduto'}" ng-click="editar(item.id)">
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td>
+									<a data-uk-modal="{target:'#modalProduto'}" title="Editar"><i class="material-icons">&#xE150;</i></a>
+									<a  title="Remover"ng-click="remover(item.id);$event.stopPropagation();"><i class="material-icons">&#xE872;</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

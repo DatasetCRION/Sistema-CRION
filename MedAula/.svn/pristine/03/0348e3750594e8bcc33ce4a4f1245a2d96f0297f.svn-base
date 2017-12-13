@@ -1,0 +1,9 @@
+package br.com.ibebidas.dao.impl;
+
+import br.com.ibebidas.dao.DiaSemanaDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.DiaSemana;
+
+public class DiaSemanaDAOImpl extends BaseDAOImpl<DiaSemana> implements DiaSemanaDAO{
+
+}

@@ -1,0 +1,165 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Produtos</h3>
+                    <div class="md-card-toolbar-actions">
+                        <i class="md-icon material-icons" data-uk-tooltip title="Salvar"
+                           id="toggleAll" ng-click="salvar()"
+                           data-uk-modal="{target:'#modalProduto'}">&#xE161;</i>
+                    </div>
+                </div>
+                <div class="md-card md-card-single" single-card>
+
+                    <div class="md-card-content" id="help_content" ng-init="mostraListaProdutos()">
+
+                        <div class="uk-grid" style="margin: 0;">
+                            <div class="uk-width-medium-2-5" style="width: 45%;padding: 0px;">
+                                <h4 class="uk-text-center">Produtos Disponíveis</h4>
+                                <div id="filterProdutos" class="dataTables_filter">
+                                    <div class="md-input-wrapper">
+                                        <input type="search" class="md-input md-input-success ng-scope ng-isolate-scope md-input-processed" 
+                                               placeholder="Pesquisar:" aria-controls="DataTables_Table_3" 
+                                               ng-model="filter.produtos" ng-change="filtroProdutos()" md-input="">
+                                        <span class="md-input-bar"></span>
+                                    </div>
+                                    <div class="uk-grid">
+                                    </div>
+                                </div>
+                                <div class="md-card" ng-if="exibeListaProdutos">
+                                    <div style="overflow-y: auto;height: {{calculaHeigth()}};" >
+                                        <div  >
+                                            <div class="uk-overflow-container">
+                                                <table class="uk-table uk-table-hover uk-table-nowrap">
+
+                                                    <tbody>
+                                                        <tr ng-repeat="item in listProduto">
+                                                            <td>
+                                                                <div class="uk-grid" data-uk-grid-margin="">
+                                                                    <div
+                                                                        class="uk-width-2-5 uk-width-small-1-5 uk-text-center">
+                                                                        <input type="checkbox" name="checkbox" id="checkbox"
+                                                                               icheck ng-model="item.checked" />
+                                                                    </div>
+                                                                    <div class="uk-width-3-5 uk-width-small-4-5">
+                                                                        <h4 class="heading_a uk-margin-small-bottom">{{item.nome}}  
+                                                                            <small>  {{item.tipoCategoria.categoria.nome}}       {{item.embalagem.nome}} - {{getVolumeEmbalagem(item.embalagem.volume)}}</small></h4>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="uk-width-medium-1-10" style="width: 10%;padding: 0px;">
+
+                                <span style="position: absolute; top:60%;left: 48%;">
+                                    <i class="md-icon material-icons" data-uk-tooltip
+                                       title="Remover" id="toggleAll" ng-click="remover()">&#xE314;</i>
+                                </span>
+                                <span style="position: absolute; top:50%;left: 48%;">
+                                    <i class="md-icon material-icons" data-uk-tooltip
+                                       title="Adicionar" id="toggleAll" ng-click="adicionar()">&#xE315;</i>
+                                </span>
+
+
+                            </div>
+                            <div class="uk-width-medium-2-5" style="width: 45%; padding: 0px;">
+                                <h4 class="uk-text-center">Adicionar Produtos</h4>
+                                <div id="filterProdutosAdicionados" class="dataTables_filter">
+                                    <div class="md-input-wrapper">
+                                        <input type="search" class="md-input md-input-success ng-scope ng-isolate-scope md-input-processed" 
+                                               placeholder="Pesquisar:" aria-controls="DataTables_Table_3" 
+                                               ng-model="filter.produtosAdicionados" ng-change="filtroProdutosAdicionados()" md-input="">
+                                        <span class="md-input-bar"></span>
+                                    </div>
+                                    <div class="uk-grid">
+                                    </div>
+                                </div>
+                                <div class="md-card" ng-if="exibeListaProdutos">
+                                    <div style="overflow-y: auto;height: {{calculaHeigth()}};" >
+                                        <div >
+                                            <div class="uk-overflow-container">
+                                                <table class="uk-table uk-table-hover uk-table-nowrap">
+                                                    <tbody>
+                                                        <tr ng-repeat="item in produtosSelecionados">
+                                                            <td>
+                                                                <div class="uk-grid" data-uk-grid-margin="">
+                                                                    <div
+                                                                        class="uk-width-2-5 uk-width-small-1-5 uk-text-center">
+                                                                        <input type="checkbox" name="checkbox" id="checkbox"
+                                                                               icheck ng-model="item.checked" />
+                                                                    </div>
+                                                                    <div class="uk-width-3-5 uk-width-small-4-5">
+                                                                        <h4 class="heading_a uk-margin-small-bottom">{{item.nome}}  
+                                                                            <small>  {{item.tipoCategoria.categoria.nome}}       {{item.embalagem.nome}} - {{getVolumeEmbalagem(item.embalagem.volume)}}</small></h4>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="md-fab-wrapper">
+    <a class="md-fab md-fab-ibebidas-laranja" ng-click="solicitaProduto()"
+       data-uk-modal="{target:'#modalSolicitaProduto'}"> <i
+            class="material-icons">&#xE145;</i>
+    </a>
+</div>
+<div id="modalSolicitaProduto" class="uk-modal">
+    <div class="uk-modal-dialog">
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">Solicitar Produto</h3>
+        </div>
+
+
+        <form id="form_solicitarProduto" class="uk-form-stacked"
+              ng-init="inicializaForm()">
+
+            <div class="uk-grid" data-uk-grid-margin>
+
+                <div class="uk-width-medium-1-1">
+                    <div class="md-input-wrapper">
+                        <div class="parsley-row">
+                            <label for="solicitacao">Texto de Solicitação
+                            </label>
+                            <textarea class="md-input md-input-success "
+                                      required
+                                      data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"
+                                      id="solicitacao" cols="30" rows="1" md-input="" ng-model="solicitacao.texto" style="">
+
+                            </textarea>
+                            <span class="md-input-bar"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="md-btn md-btn-flat uk-modal-close"
+                    ng-click="showForm = false">Cancelar</button>
+            <button ng-click="salvarSolicitacao()" type="button"
+                    class="md-btn md-btn-flat md-btn-flat-primary">Confirmar</button>
+        </div>
+    </div>
+</div>

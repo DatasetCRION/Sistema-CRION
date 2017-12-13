@@ -1,0 +1,58 @@
+app.config([
+    '$stateProvider',
+    '$urlRouterProvider',
+    function ($stateProvider, $urlRouterProvider) {
+
+        // Use $urlRouterProvider to configure any redirects (when) and invalid urls (otherwise).
+        $urlRouterProvider
+                .when('/principal', '/')
+                .otherwise('/');
+
+
+        $stateProvider
+
+                .state("erro", {
+                    url: "/erro",
+                    templateUrl: 'app/view/erros/erro.html'
+                })
+                .state("erro.404", {
+                    url: "/404",
+                    templateUrl: 'app/view/erros/404.html'
+                })
+                .state("erro.403", {
+                    url: "/403",
+                    templateUrl: 'app/view/erros/403.html'
+                })
+
+
+                
+                .state("restricted", {
+	                abstract: true,
+	                url: "",
+	                views: {
+	                    'main_header': {
+	                        templateUrl: 'app/view/templates/header.html',
+	                        controller: 'ctrl_header'
+	                    },
+	                    'main_sidebar': {
+	                        templateUrl: 'app/view/templates/menu.html',
+	                        controller: 'ctrl_menu'
+	                    },
+	                    '': {
+	                        templateUrl: 'app/view/restricted.html'
+	                    }
+	                }
+                })
+
+
+                .state("restricted.principal", {
+                    url: "/",
+                    templateUrl: 'app/view/principal.html',
+                    controller: 'ctrl_principal',
+                    data: {
+                        pageTitle: 'Dashboard'
+                    }
+                })
+
+    }
+]);

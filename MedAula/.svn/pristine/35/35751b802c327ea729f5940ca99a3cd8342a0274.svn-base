@@ -1,0 +1,14 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.ParceiroDAOImpl;
+import br.com.ibebidas.entity.Parceiro;
+
+@ImplementedBy(ParceiroDAOImpl.class)
+public interface ParceiroDAO extends BaseDAO<Parceiro> {
+	
+	public Parceiro findByLogin(String login);
+	
+}

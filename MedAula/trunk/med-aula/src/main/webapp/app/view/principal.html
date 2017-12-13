@@ -1,0 +1,44 @@
+<html>
+<head>
+<title></title>
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+   <script src="http://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+    
+    
+<table>
+    <tr>
+            <td id="totalbanco" style="width: 300px; height: 400px; margin: 10"></td>
+            <td></td>
+            <td id="qtdcrime" style="width: 450px; height: 400px; margin: 10"></td>
+     </tr>
+     <tr>
+            <td id="cidades" style="width: 1000px; height: 400px; margin: 10"></td>
+            <td></td>
+            <td id="classificacaoCrime" style="width: 450px; height: 400px; margin: 10"></td>
+     </tr>
+</table>
+<script language="JavaScript">
+$(document).ready(function() {
+    
+      Highcharts.chart('totalbanco',$document);
+      Highcharts.chart('cidades',$document);
+      Highcharts.chart('classificacaoCrime',$document);
+      Highcharts.chart('qtdcrime',$document);
+      
+});
+</script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

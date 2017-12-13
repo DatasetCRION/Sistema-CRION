@@ -1,0 +1,19 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.PedidoDAOImpl;
+import br.com.ibebidas.entity.Parceiro;
+import br.com.ibebidas.entity.Pedido;
+import java.util.Collection;
+import java.util.List;
+
+@ImplementedBy(PedidoDAOImpl.class)
+public interface PedidoDAO extends BaseDAO<Pedido> {
+
+    public List<Pedido> findAllByParceiro(Long idParceiro);
+
+    public List<Pedido> findAllByStatus(Long idParceiro,Collection<Long> idsStatus);
+
+}

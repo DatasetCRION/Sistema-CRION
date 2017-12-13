@@ -1,0 +1,12 @@
+package br.com.ibebidas.service;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.entity.FormaPagamentoParceiro;
+import br.com.ibebidas.service.base.BaseService;
+import br.com.ibebidas.service.impl.FormaPagamentoParceiroServiceImpl;
+
+@ImplementedBy(FormaPagamentoParceiroServiceImpl.class)
+public interface FormaPagamentoParceiroService extends BaseService<FormaPagamentoParceiro>{
+
+}

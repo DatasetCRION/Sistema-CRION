@@ -1,0 +1,55 @@
+package br.com.ibebidas.config;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.persist.PersistFilter;
+import com.google.inject.persist.jpa.JpaPersistModule;
+import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.servlet.ServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+
+import br.com.ibebidas.resource.CommonsResource;
+import br.com.ibebidas.resource.FormaPagamentoParceiroResource;
+import br.com.ibebidas.resource.HorarioFuncionamentoResource;
+import br.com.ibebidas.resource.ParceiroResource;
+import br.com.ibebidas.resource.PedidoResource;
+import br.com.ibebidas.resource.StatusResource;
+import br.com.ibebidas.resource.UsuarioResource;
+
+
+
+public class GuiceServletConfig extends GuiceServletContextListener{
+	
+	
+	@Override
+	protected Injector getInjector() {
+		return Guice.createInjector(new ServletModule() {
+			@Override
+			protected void configureServlets() {
+
+				
+				install(new JpaPersistModule("ibebidasparceiro"));
+			    filter("/*").through(PersistFilter.class);
+			   
+			    bind(ParceiroResource.class);
+			    bind(UsuarioResource.class);
+			    bind(CommonsResource.class);
+                            
+			    bind(PedidoResource.class);
+			    bind(HorarioFuncionamentoResource.class);
+			    bind(FormaPagamentoParceiroResource.class);
+			    bind(StatusResource.class);
+
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("com.sun.jersey.api.json.POJOMappingFeature", "true");
+				serve("/rest/*").with(GuiceContainer.class, params);
+
+			}
+		});
+	}
+	
+
+}

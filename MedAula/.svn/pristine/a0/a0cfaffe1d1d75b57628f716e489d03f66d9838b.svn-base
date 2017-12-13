@@ -1,0 +1,16 @@
+package br.com.ibebidas.dao;
+
+import java.util.List;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.EstadoDAOImpl;
+import br.com.ibebidas.entity.Estado;
+
+@ImplementedBy(EstadoDAOImpl.class)
+
+public interface EstadoDAO extends BaseDAO<Estado> {
+	List<Estado> getEstadosBrasil();
+
+}

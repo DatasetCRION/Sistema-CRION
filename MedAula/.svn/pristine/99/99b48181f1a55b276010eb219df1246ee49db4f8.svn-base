@@ -1,0 +1,99 @@
+package br.com.ibebidas.resource;
+
+import java.util.List;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
+
+import br.com.ibebidas.config.Constantes;
+import br.com.ibebidas.entity.Status;
+import br.com.ibebidas.service.EnderecoService;
+import br.com.ibebidas.service.StatusService;
+import br.com.ibebidas.util.Util;
+
+@Path(value = "/status")
+@Produces("application/json; charset=UTF-8")
+public class StatusResource {
+
+    @Inject
+    private StatusService statusService;
+
+    @Inject
+    private EnderecoService enderecoService;
+
+    @GET
+    @Transactional
+    public List<Status> getStatus() {
+
+        try {
+            return statusService.findAll();
+
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+
+    }
+
+    @GET
+    @Transactional
+    @Path("{id}")
+    public Status getStatus(@PathParam("id") Long id) {
+
+        try {
+            return statusService.findById(id);
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+
+    }
+
+
+    @DELETE
+    @Transactional
+    @Path(value = "{id}")
+    public Response remover(@PathParam("id") Long id) {
+
+        try {
+            statusService.deleteById(id);
+            return Response.ok(new Object() {
+                @SuppressWarnings("unused")
+                public String msg = Constantes.REGISTRO_REMOVIDO_SUCESSSO;
+                @SuppressWarnings("unused")
+                public int status = Response.Status.OK.getStatusCode();
+            }).build();
+
+        } catch (Exception e) {
+            ResponseBuilder rb = Response.status(Response.Status.BAD_REQUEST.getStatusCode());
+            rb = rb.entity(new Object() {
+                @SuppressWarnings("unused")
+                public String msg = Constantes.REGISTRO_POSSUI_DEPENDENCIAS;
+            });
+            return rb.build();
+        }
+    }
+
+    @POST
+    @Transactional
+    public Status salvarStatus(Status status) {
+        try {
+
+            return statusService.saveOrUpdate(status);
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+    }
+
+}

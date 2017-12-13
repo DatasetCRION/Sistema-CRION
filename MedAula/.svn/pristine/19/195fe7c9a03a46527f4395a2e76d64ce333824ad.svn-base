@@ -1,0 +1,12 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.FormaPagamentoParceiroDAOImpl;
+import br.com.ibebidas.entity.FormaPagamentoParceiro;
+
+@ImplementedBy(FormaPagamentoParceiroDAOImpl.class)
+public interface FormaPagamentoParceiroDAO extends BaseDAO<FormaPagamentoParceiro> {
+
+}

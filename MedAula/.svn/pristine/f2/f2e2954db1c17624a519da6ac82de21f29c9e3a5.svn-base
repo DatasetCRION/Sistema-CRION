@@ -1,0 +1,21 @@
+package br.com.ibebidas.service.impl;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.PrecoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.Preco;
+import br.com.ibebidas.service.PrecoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class PrecoServiceImpl extends BaseServiceImpl<Preco> implements PrecoService {
+
+	@Inject private PrecoDAO dao;
+	
+	@Override
+	public BaseDAO<Preco> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+	}
+
+}

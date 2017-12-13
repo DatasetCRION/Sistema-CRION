@@ -1,0 +1,12 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.EnderecoDAOImpl;
+import br.com.ibebidas.entity.Endereco;
+
+@ImplementedBy(EnderecoDAOImpl.class)
+public interface EnderecoDAO extends BaseDAO<Endereco> {
+
+}

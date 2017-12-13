@@ -1,0 +1,159 @@
+package br.com.ibebidas.entity;
+
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import br.com.ibebidas.entity.base.BaseEntityImpl;
+import br.com.ibebidas.enums.TipoPessoa;
+
+@Entity
+@Table(name="tb_parceiro")
+public class Parceiro extends BaseEntityImpl<Parceiro> {
+
+	private static final long serialVersionUID = -90563202302656760L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
+	private Long id;
+	
+	@Column(name="nome_estabelecimento")
+	private String nomeEstabelecimento;
+	
+	@Column(name="nome_responsavel")
+	private String nomeResponsavel;
+
+	@Column(name="email_responsavel")
+	private String emailResponsavel;
+	
+
+	@Column(name="documento")
+	private String documento;
+	
+	@Column(name="tipo_pessoa")
+	@Enumerated(EnumType.STRING)
+	TipoPessoa tipoPessoa;
+		
+	@Column(name="senha")
+	private String senha;
+	
+	@ManyToOne
+	@JoinColumn(name="id_endereco")
+	private Endereco endereco;
+	
+	@Transient
+	private String confSenha;
+	
+	@Transient
+	private String novaSenha;
+	
+	@OneToMany(cascade = {CascadeType.ALL, CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "parceiro", orphanRemoval = true)
+	private List<FormaPagamentoParceiro> formaPagamentoParceiro;
+	
+	
+
+
+
+	public List<FormaPagamentoParceiro> getFormaPagamentoParceiro() {
+		return formaPagamentoParceiro;
+	}
+
+	public void setFormaPagamentoParceiro(List<FormaPagamentoParceiro> formaPagamentoParceiro) {
+		this.formaPagamentoParceiro = formaPagamentoParceiro;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNomeEstabelecimento() {
+		return nomeEstabelecimento;
+	}
+
+	public void setNomeEstabelecimento(String nomeEstabelecimento) {
+		this.nomeEstabelecimento = nomeEstabelecimento;
+	}
+
+	public String getNomeResponsavel() {
+		return nomeResponsavel;
+	}
+
+	public void setNomeResponsavel(String nomeResponsavel) {
+		this.nomeResponsavel = nomeResponsavel;
+	}
+
+	public String getEmailResponsavel() {
+		return emailResponsavel;
+	}
+
+	public void setEmailResponsavel(String emailResponsavel) {
+		this.emailResponsavel = emailResponsavel;
+	}
+
+	public String getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
+
+	public TipoPessoa getTipoPessoa() {
+		return tipoPessoa;
+	}
+
+	public void setTipoPessoa(TipoPessoa tipoPessoa) {
+		this.tipoPessoa = tipoPessoa;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public Endereco getEndereco() {
+		return endereco;
+	}
+
+	public void setEndereco(Endereco endereco) {
+		this.endereco = endereco;
+	}
+
+	public String getConfSenha() {
+		return confSenha;
+	}
+
+	public void setConfSenha(String confSenha) {
+		this.confSenha = confSenha;
+	}
+
+	public String getNovaSenha() {
+		return novaSenha;
+	}
+
+	public void setNovaSenha(String novaSenha) {
+		this.novaSenha = novaSenha;
+	}
+	
+}

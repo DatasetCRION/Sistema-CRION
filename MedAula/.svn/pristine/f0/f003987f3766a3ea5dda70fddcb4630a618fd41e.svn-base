@@ -1,0 +1,30 @@
+package br.com.ibebidas.service.impl;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import com.google.inject.Inject;
+import br.com.ibebidas.dao.PedidoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.Parceiro;
+import br.com.ibebidas.entity.Pedido;
+
+import br.com.ibebidas.service.PedidoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+import java.util.List;
+
+
+public class PedidoServiceImpl extends BaseServiceImpl<Pedido> implements
+        PedidoService {
+
+    @Inject
+    private PedidoDAO pedidoDao;
+
+    @Override
+    public BaseDAO<Pedido> getDAO() {
+        return pedidoDao;
+    }
+
+    public List<Pedido> findAll(Parceiro parceiro) {
+        return getDAO().findAll(/*parceiro*/);
+    }
+}

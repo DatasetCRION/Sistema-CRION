@@ -1,0 +1,53 @@
+package br.com.ibebidas.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import br.com.ibebidas.entity.base.BaseEntityImpl;
+
+@Entity
+@Table(name = "tb_tipo_embalagem")
+public class Embalagem extends BaseEntityImpl<Embalagem> {
+
+    private static final long serialVersionUID = -90563202302656760L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "nome")
+    private String nome;
+
+    @Column(name = "volume")
+    private float volume;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public void setVolume(float volume) {
+        this.volume = volume;
+    }
+
+}

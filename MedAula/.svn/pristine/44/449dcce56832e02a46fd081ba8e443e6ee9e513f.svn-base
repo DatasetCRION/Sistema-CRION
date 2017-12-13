@@ -1,0 +1,21 @@
+package br.com.ibebidas.service.impl;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.SolicitacaoProdutoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.SolicitacaoProduto;
+import br.com.ibebidas.service.SolicitacaoProdutoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class SolicitacaoProdutoServiceImpl extends BaseServiceImpl<SolicitacaoProduto> implements SolicitacaoProdutoService {
+
+	@Inject private SolicitacaoProdutoDAO dao;
+	
+	@Override
+	public BaseDAO<SolicitacaoProduto> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+	}
+
+}

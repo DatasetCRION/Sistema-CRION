@@ -1,0 +1,21 @@
+package br.com.ibebidas.dao.impl;
+
+import java.util.List;
+
+import br.com.ibebidas.dao.EstadoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Estado;
+
+public class EstadoDAOImpl extends BaseDAOImpl<Estado> implements EstadoDAO{
+	
+	@SuppressWarnings("unchecked")
+	public List<Estado> getEstadosBrasil() {
+		StringBuilder sb = new StringBuilder()
+		        .append("select * ")
+		        .append(" from tb_estado ")
+		        .append(" where pais = 1 ")
+		        .append("order by uf ");
+		        return getEntityManager().createNativeQuery(sb.toString(),Estado.class).getResultList();
+	}
+
+}

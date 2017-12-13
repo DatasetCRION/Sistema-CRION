@@ -1,0 +1,134 @@
+app.controller('ctrl_meuspedidos', function ($scope,
+        $rootScope, $compile, $timeout, $interval, genericService,
+        DTOptionsBuilder, DTColumnDefBuilder, dataTableLanguageService, commonsService, pedidos) {
+
+    var ng = $scope;
+
+    $rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+
+    ng.showForm = false;
+    $formValidate = null;
+    ng.listPedidos = pedidos;
+    ng.dtInstance = {};
+
+    ng.dtOptions = DTOptionsBuilder
+            .newOptions()
+            .withPaginationType('full_numbers')
+            .withOption('initComplete', function () {
+                $timeout(function () {
+
+                    // md inputs
+                    $compile($('.dt-uikit .md-input'))($scope);
+                });
+            }).withLanguage(
+            dataTableLanguageService.portugues()
+            );
+    ng.service = new genericService("pedido");
+
+    ng.getPedidos = function () {
+        ng.service.getAll(function (response) {
+            ng.listPedidos = response;
+        });
+    };
+
+    ng.valorSum = function (array) {
+        if (!array)
+            return;
+        var sum = 0;
+        array.forEach(function (key) {
+            sum += key.preco * key.quantidade;
+        });
+        return sum;
+    };
+
+    ng.status = function (status) {
+        switch (status) {
+            case 'S':
+                return "Solicitado";
+                break;
+            case 'C':
+                return "Confirmado";
+                break;
+            case 'R':
+                return "Em Rota";
+                break;
+            case 'E':
+                return "Entregue";
+                break;
+            case 'A':
+                return "Avaliado";
+                break;
+            case 'C':
+                return "Cancelado";
+                break;
+        }
+    };
+
+    ng.visualizar = function (index) {
+        ng.pedido = [];
+        UIkit.modal("#modalPedido").show();
+        var item = ng.listPedidos[index];
+        ng.pedido = item;
+        console.log(item);
+    };
+
+    ng.salvar = function () {
+
+        if ($formValidate.parsley().validate()) {
+            usuarioService.validaEmail(ng.usuario.id, ng.usuario.email, function (response) {
+                if (response.valido == "true") {
+                    ng.service.salvar(ng.parceiro, function (response) {
+                        UIkit.modal("#modalMeusPedidos").hide();
+                        ng.showForm = false;
+                        ng.getPedidos();
+                        ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+                    }, function () {
+
+                    });
+                } else {
+                    ng.alerta(LABEL_ERRO, "E-mail já cadastrado");
+                }
+            });
+        } else {
+            ng.alerta(LABEL_ATENCAO, MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS);
+        }
+    };
+
+    ng.remover = function (id) {
+        ng.confirmacao(MSG_CONFIRMACAO_EXCLUSAO,
+                function () {
+                    ng.service.remover(id, function (response) {
+                        ng.sucesso(LABEL_SUCESSO, response.msg);
+                        ng.getPedidos();
+                    }, function (response) {
+                        ng.erro(LABEL_ERRO, response.msg);
+                    });
+                }
+        );
+    };
+
+
+    ng.inicializaForm = function () {
+
+        $formValidate = $('#form_pedido');
+
+        $formValidate
+                .parsley()
+                .on('form:validated', function () {
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                })
+                .on('field:validated', function (parsleyField) {
+                    if ($(parsleyField.$element).hasClass('md-input')) {
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                });
+
+    };
+});

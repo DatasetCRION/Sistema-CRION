@@ -1,0 +1,164 @@
+app.controller('ctrl_produtoParceiroPreco', function ($scope, $rootScope, $compile, $timeout, $interval,
+        genericService, DTOptionsBuilder, DTColumnDefBuilder,
+        dataTableLanguageService, commonsService,
+        produtosParceiro) {
+
+    var ng = $scope;
+
+    $rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+
+    ng.showForm = false;
+    $formValidate = null;
+
+    ng.listProdutosParceiro = produtosParceiro;
+
+    for (var i in ng.listProdutosParceiro) {
+        ng.listProdutosParceiro[i].ativo = ng.listProdutosParceiro[i].ativo == 1;
+    }
+
+    ng.service = new genericService("produtoparceiro");
+    ng.servicePreco = new genericService("preco");
+
+    ng.inicializaForm = function () {
+
+        $formValidate = $('#form_produtoParceiroPreco');
+
+        $formValidate.parsley().on('form:validated',
+                function () {
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                }).on(
+                'field:validated',
+                function (parsleyField) {
+                    if ($(parsleyField.$element).hasClass(
+                            'md-input')) {
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                });
+
+    };
+
+    ng.getVolumeEmbalagem = function (volume) {
+
+        if (volume >= 1000) {
+            volume = volume / 1000;
+            volume += " L";
+        } else
+            volume += " ml";
+
+        volume = volume.replace(".", ",");
+
+        return volume;
+    }
+
+    ng.labelStatus = function (ativo) {
+        if (ativo)
+            ativo = "Ativo";
+        else
+            ativo = "Inativo";
+        return ativo;
+    }
+
+    ng.getProdutoFromPP = function () {
+        var produtosParceiro = [];
+        for (var i in produtosParceiro) {
+            produtosParceiro.push(produtosParceiro[i].produto);
+        }
+        return produtosParceiro;
+    };
+
+    ng.listProdutos = ng.getProdutoFromPP();
+
+    ng.toggleStatusProdutoParceiro = function (i) {
+        ng.saveStatus(i);
+    }
+
+    ng.saveStatus = function (produtosParceiro) {
+        if (produtosParceiro.preco != null && produtosParceiro.preco != 0) {
+            if (produtosParceiro.ativo)
+                produtosParceiro.ativo = 1;
+            else
+                produtosParceiro.ativo = 0;
+
+            produtosParceiro = [produtosParceiro];
+            ng.service.salvar(produtosParceiro, function (response) {
+                produtosParceiro = response;
+                ng.sucesso(LABEL_SUCESSO,
+                        MSG_REGISTRO_SALVO_SUCESSO);
+
+            }, function () {
+
+            });
+        } else {
+            ng.alerta(LABEL_ATENCAO, "O campo preço deve ser preenchido.");
+            ng.getProdutosParceiro();
+        }
+
+    }
+
+    ng.salvar = function () {
+        if ($formValidate.parsley().validate()) {
+            console.log(ng.preco);
+            console.log(ng.preco.ativarPromocional);
+            if (ng.preco.ativarPromocional)
+                ng.preco.ativarPromocional = 1;
+            else
+                ng.preco.ativarPromocional = 0;
+            ng.servicePreco.salvar(ng.preco,
+                    function (response) {
+                        UIkit.modal(
+                                "#modalProdutoPreco")
+                                .hide()
+                        ng.showForm = false;
+                        ng.getProdutosParceiro();
+                        ng.sucesso(LABEL_SUCESSO,
+                                MSG_REGISTRO_SALVO_SUCESSO);
+                    }, function () {
+
+            });
+        } else {
+            ng.alerta(LABEL_ATENCAO,
+                    MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS)
+        }
+    };
+
+    ng.editar = function (idProdutoParceiro, posicaoId) {
+        
+        ng.produtoParceiro = ng.listProdutosParceiro[posicaoId];
+        ng.preco = {preco: ng.produtoParceiro.preco,
+            precoPromocional: ng.produtoParceiro.precoPromocional,
+            ativarPromocional: ng.produtoParceiro.ativarPromocional,
+            produtoParceiro: {id: idProdutoParceiro}};
+        ng.showForm = true;
+    };
+
+    ng.getProdutosParceiro = function () {
+        ng.service.getAll(function (response) {
+            ng.listProdutosParceiro = response;
+        });
+    };
+
+    ng.dtInstance = {};
+
+    ng.dtOptions = DTOptionsBuilder.newOptions()
+            .withPaginationType('full_numbers').withOption(
+            'initComplete',
+            function () {
+                $timeout(function () {
+
+                    // md inputs
+                    $compile($('.dt-uikit .md-input'))(
+                            $scope);
+                })
+            }).withLanguage(
+            dataTableLanguageService.portugues());
+
+    ng.dtColumnDefs = [DTColumnDefBuilder.newColumnDef(5)
+                .notSortable()];
+
+});

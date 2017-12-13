@@ -1,0 +1,173 @@
+
+<div id="page_content">
+	<div id="page_content_inner">
+
+		<div class="uk-width-medium-9-10 uk-container-center">
+
+			<div class="md-card md-card-single" single-card>
+				<div class="md-card-toolbar">
+					<h3 class="md-card-toolbar-heading-text large">Meus Dados</h3>
+					<div class="md-card-toolbar-actions">
+						<i class="md-icon material-icons" data-uk-tooltip title="Salvar"
+							id="toggleAll" ng-click="salvar()"
+							data-uk-modal="{target:'#modalCadastroMeusDados'}">&#xE161;</i>
+					</div>
+				</div>
+
+				<div class="md-card-content" id="help_content">
+
+					<form id="form_meusdados" class="uk-form-stacked"
+						ng-init="inicializaForm()">
+						<div class="uk-grid" data-uk-grid-margin>
+
+							<div class="uk-width-medium-1-1">
+								<div class="parsley-row">
+									<label for="nomeEstabelecimento">Nome do
+										estabelecimento<span class="req">*</span>
+									</label> <input class="md-input md-input-success" type=text
+										id="nomeEstabelecimento" name="nomeEstabelecimento"
+										ng-model="parceiro.nomeEstabelecimento" md-input required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+						</div>
+						<div class="uk-grid" data-uk-grid-margin>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="nomeResponsavel">Nome do responsável<span
+										class="req">*</span></label> <input class="md-input md-input-success"
+										type=text id="nomeResponsavel" name="nomeResponsavel"
+										ng-model="parceiro.nomeResponsavel" md-input required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+
+							<div class="uk-width-medium-1-2">
+								<label for="emailResponsavel">Email do responsável<span
+									class="req">*</span></label> <input class="md-input md-input-success"
+									type=text id="emailResponsavel" name="emailResponsavel"
+									ng-model="parceiro.emailResponsavel" md-input required
+									data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+							</div>
+						</div>
+						<div class="uk-grid" data-uk-grid-margin>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="tipoPessoa">Tipo pessoa<span class="req">*</span></label>
+									<input type="text" config="tipoPessoaConfig"
+										options="listTipoPessoa" ng-model="parceiro.tipoPessoa"
+										id="tipoPessoa" name="tipoPessoa" selectize required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="documento">CPF/CNPJ<span class="req">*</span></label>
+									<input class="md-input md-input-success" type=text
+										id="documento" name="documento" ng-model="parceiro.documento"
+										md-input required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+						</div>
+						<div class="uk-grid" data-uk-grid-margin>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="cep">CEP<span class="req">*</span></label> <input
+										class="md-input md-input-success" type="text" name="cep"
+										id="cep" ng-model="parceiro.endereco.cep" md-input required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"
+										mask='99.999-999'
+										ng-change="preencheEndereco(parceiro.endereco.cep)"
+										mask-clean='true' mask-validate='true' />
+								</div>
+							</div>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="logradouro">Logradouro<span class="req">*</span></label>
+									<input class="md-input md-input-success" type="text"
+										name="logradouro" id="logradouro"
+										ng-model="parceiro.endereco.logradouro" md-input required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+						</div>
+						<div class="uk-grid" data-uk-grid-margin>
+							<div class="uk-width-medium-1-4">
+								<label for="numero">Número</label> <input
+									class="md-input md-input-success" type="text" id="numero"
+									name="numero" ng-model="parceiro.endereco.numero" md-input />
+							</div>
+							<div class="uk-width-medium-1-4">
+								<label for="complemento">Complemento</label> <input
+									class="md-input md-input-success" type="text" id="complemento"
+									name="complemento" ng-model="parceiro.endereco.complemento"
+									md-input />
+							</div>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="complemento">Bairro<span class="req">*</span></label>
+									<input class="md-input md-input-success" type="text"
+										id="bairro" name="bairro" ng-model="parceiro.endereco.bairro"
+										md-input required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+						</div>
+						<div class="uk-grid" data-uk-grid-margin>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="estado" class="uk-form-label">Estado<span
+										class="req">*</span>
+									</label><input type="text" config="estadosConfig" options="listEstados"
+										ng-model="parceiro.endereco.uf" name="estado" selectize
+										required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+							<div class="uk-width-medium-1-2">
+								<div class="parsley-row">
+									<label for="cidade" class="uk-form-label">Cidade<span
+										class="req">*</span>
+									</label> <input type="text" config="cidadesConfig"
+										options="listCidades" ng-model="parceiro.endereco.cidade"
+										name="cidade" selectize required
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+						</div>
+						<div class="uk-grid" data-uk-grid-margin>
+							<div class="uk-width-medium-1-2" ng-if="parceiro.id != null">
+								<div class="parsley-row">
+									<label for="nome">Nova Senha</label> <input
+										class="md-input md-input-success" type="password"
+										id="novaSenhaAcesso" name="novaSenhaAcesso"
+										ng-model="parceiro.novaSenha" md-input />
+								</div>
+							</div>
+							<div class="uk-width-medium-1-2" ng-if="parceiro.id != null">
+								<div class="parsley-row">
+									<label for="nome">Confirmação da nova senha<span
+										ng-if="parceiro.novaSenha != null && parceiro.novaSenha != ''"
+										class="req">*</span></label> <input class="md-input md-input-success"
+										type="password" id="confNovaSenha" name="confNovaSenha"
+										data-parsley-equalto-message="A confirmação da senha não corresponde com a senha"
+										md-input data-parsley-equalto="#novaSenhaAcesso"
+										ng-model="parceiro.confSenha" md-input
+										ng-required="parceiro.novaSenha != null && parceiro.novaSenha != ''"
+										data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+								</div>
+							</div>
+						</div>
+
+					</form>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+

@@ -1,0 +1,21 @@
+package br.com.ibebidas.service.impl;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.HorarioFuncionamentoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.HorarioFuncionamento;
+import br.com.ibebidas.service.HorarioFuncionamentoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class HorarioFuncionamentoServiceImpl extends BaseServiceImpl<HorarioFuncionamento> implements HorarioFuncionamentoService {
+
+	@Inject private HorarioFuncionamentoDAO dao;
+	
+	@Override
+	public BaseDAO<HorarioFuncionamento> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+	}
+
+}

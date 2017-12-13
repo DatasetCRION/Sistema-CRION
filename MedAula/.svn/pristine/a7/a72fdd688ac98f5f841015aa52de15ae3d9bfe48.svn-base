@@ -1,0 +1,431 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">{{showForm?(unidade.id ? 'Editar Unidade'
+                    : 'Cadastro de Unidade'):'Unidades'}}</h3>
+                    
+                    <div ng-if="showForm" class="md-card-toolbar-actions">
+                    	 <i class="md-icon material-icons" data-uk-tooltip title="Cancelar" id="toggleAll" ng-click="cancelar()" data-uk-modal="{target:'#modalFiltroRelatorio'}">&#xE5C9;</i>
+                    	 						
+                         <i class="md-icon material-icons" data-uk-tooltip title="Salvar" id="toggleAll" ng-click="salvar()" data-uk-modal="{target:'#modalFiltroRelatorio'}">&#xE161;</i>
+                    </div>
+                    
+                </div>
+
+                <div ng-show="!showForm" class="md-card-content padding-reset" id="help_content">
+
+
+                    <table datatable="ng" class="uk-table" dt-instance="dtInstance"
+                           dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+                        <thead>
+                            <tr>
+                                <td>Franqueado</td>
+                                <td>Nome</td>
+                                <td>CNPJ</td>
+                                <td>Modelo</td>
+                                <td>Cidade/Estado</td>
+                                <td>Ações</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in listUnidades" data-uk-modal="{target:'#modalCadastroUnidade'}" ng-click="editar(item.id)">
+                                <td>{{item.franqueado.nome}}</td>
+                                <td>{{item.nome}}</td>
+                                <td>{{item.cnpj | brCnpj}}</td>
+                                <td>{{item.modelo.nome}}</td>
+                                <td>{{item.endereco.cidade}}/{{item.endereco.uf}}</td>
+                                <td>
+                                    <a data-uk-modal="{target:'#modalCadastroUnidade'}" title="Editar"><i class="material-icons">&#xE150;</i></a>
+                                    <a  title="Remover" ng-click="remover(item.id);$event.stopPropagation();"><i class="material-icons">&#xE872;</i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div ng-show="showForm" class="md-card-content" id="help_content">
+                    <form id="form_unidade" class="uk-form-stacked" ng-if="showForm"
+                          ng-init="inicializaForm()">
+                        <v-tabs class="vTabs--default" horizontal active="activeTabIndex">
+                            <v-tab>Dados Gerais</v-tab>
+                            <v-tab>Endereço</v-tab>
+                            <v-tab>Horários</v-tab>
+                            <v-tab>Documentos</v-tab>
+                        </v-tabs>
+
+                        <v-pages class="vPages--default" active="activeTabIndex">
+                            <v-page>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="perfil" class="uk-form-label">Franqueado<span class="req">*</span>
+                                            </label> <input type="text" config="franqueadoConfig"
+                                                            options="listFranqueados" ng-model="unidade.franqueado.id" 
+                                                            name="franqueado" selectize required
+                                                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="perfil" class="uk-form-label">Modelo da Franquia<span class="req">*</span>
+                                            </label> <input type="text" config="modeloConfig"
+                                                            options="listModelosFranquia" ng-model="unidade.modelo.id" 
+                                                            name="modelo" selectize required
+                                                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2">
+                                        <label for="nome">Nome<span class="req">*</span></label> <input
+                                            class="md-input md-input-success" type=text id="nome"
+                                            name="nome" ng-model="unidade.nome" md-input required
+                                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <label for="nome">CNPJ<span class="req">*</span></label> <input
+                                            class="md-input md-input-success" type=text id="cnpj"
+                                            name="cnpj" ng-model="unidade.cnpj" md-input required only-numbers="onKeydown" restrict="reject"
+                                            ui-br-cnpj-mask data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2" >
+                                        <div class="parsley-row">
+                                            <label for="nome">Email<span class="req">*</span></label> <input
+                                                class="md-input md-input-success" type=text id="email"
+                                                name="email" ng-model="unidade.email" md-input required
+                                                data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="nome">Telefone<span class="req">*</span></label> <input
+                                                class="md-input md-input-success" type=text id="telefone"
+                                                name="telefone" only-numbers="onKeydown" restrict="reject"
+                                                ui-br-phone-number
+                                                ng-model="unidade.telefone" md-input required
+                                                data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div> 
+                                </div> 
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="nome">Data Inauguração<span class="req">*</span></label>
+                                            <input kendo-date-picker k-options="dataContratoConfig"
+                                                   class="masked_input"
+                                                   data-inputmask="'alias': '99/99/9999'" data-inputmask-showmaskonhover="false"
+                                                   k-format="'dd/MM/yyyy'" style="width: 100%;"
+                                                   ng-model="unidade.dataInauguracao" id="dataInauguracao" name="dataInauguracao" required
+                                                   data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <input type="checkbox" ng-true-value="1" ng-false-value="0" ui-switch ng-model="unidade.delivery" color="#774386" checked id="delivery" />
+                                        <label for="nome" class="inline-label">Delivery</label>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="nome">Data Início Contrato<span class="req">*</span></label>
+                                            <input kendo-date-picker k-options="dataContratoConfig"
+                                                   class="masked_input"
+                                                   data-inputmask="'alias': '99/99/9999'" data-inputmask-showmaskonhover="false"
+                                                   k-format="'dd/MM/yyyy'" style="width: 100%;"
+                                                   ng-model="unidade.dataInicioContrato" id="dataInicioContrato" name="dataInicioContrato" required
+                                                   data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="nome">Data Fim Contrato<span class="req">*</span></label>
+                                            <input kendo-date-picker k-options="dataContratoConfig"
+                                                   class="masked_input"
+                                                   data-inputmask="'alias': '99/99/9999'" data-inputmask-showmaskonhover="false"
+                                                   k-format="'dd/MM/yyyy'" style="width: 100%;"
+                                                   ng-model="unidade.dataFimContrato" id="dataFimContrato" name="dataFimContrato" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </v-page>
+                            <v-page>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="cep">CEP<span class="req">*</span></label> <input
+                                                class="md-input md-input-success" type="text" name="cep" id="cep"
+                                                ng-model="unidade.endereco.cep" md-input required
+                                                data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"
+                                                mask='99.999-999'
+                                                ng-change="preencheEndereco(unidade.endereco.cep)"
+                                                mask-clean='true' mask-validate='true' />
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="logradouro">Logradouro<span class="req">*</span></label>
+                                            <input class="md-input md-input-success" type="text"
+                                                   name="logradouro" id="logradouro"
+                                                   ng-model="unidade.endereco.logradouro" md-input required
+                                                   data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-4">
+                                        <label for="numero">Número</label> <input
+                                            class="md-input md-input-success" type="text" id="numero"
+                                            name="numero" ng-model="unidade.endereco.numero" md-input />
+                                    </div>
+                                    <div class="uk-width-medium-1-4">
+                                        <label for="complemento">Complemento</label> <input
+                                            class="md-input md-input-success" type="text" id="complemento"
+                                            name="complemento" ng-model="unidade.endereco.complemento"
+                                            md-input />
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="complemento">Bairro<span class="req">*</span></label>
+                                            <input class="md-input md-input-success" type="text" id="bairro"
+                                                   name="bairro" ng-model="unidade.endereco.bairro" md-input
+                                                   required
+                                                   data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="estado" class="uk-form-label">Estado<span class="req">*</span>
+                                            </label><input type="text" config="estadosConfig"
+                                                           options="listEstados" ng-model="unidade.endereco.uf"
+                                                           name="estado" selectize required
+                                                           data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-medium-1-2">
+                                        <div class="parsley-row">
+                                            <label for="cidade" class="uk-form-label">Cidade<span class="req">*</span>
+                                            </label> <input type="text" config="cidadesConfig"
+                                                            options="listCidades" ng-model="unidade.endereco.cidade"
+                                                            name="cidade" selectize required
+                                                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </v-page>
+                            <v-page>
+                                <div class="uk-accordion" data-uk-accordion>
+                                    <h3 class="uk-accordion-title">Funcionamento durante a Semana</h3>
+                                    <div class="uk-accordion-content">
+                                        <div class="uk-grid" data-uk-grid-margin>
+                                            <div class="uk-width-medium-1-2">
+                                                <div class="uk-input-group">
+                                                    <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                    <label for="nome">Inicio<span class="req">*</span></label>
+                                                    <input class="md-input" type="text" id="horarioInicioSemana" data-uk-timepicker md-input ng-model="unidade.horarioInicioSemana"
+                                                           required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                                </div>
+                                            </div>
+                                            <div class="uk-width-medium-1-2">
+                                                <div class="uk-input-group">
+                                                    <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                    <label for="nome">Fim<span class="req">*</span></label>
+                                                    <input class="md-input" type="text" id="horarioFimSemana" data-uk-timepicker md-input ng-model="unidade.horarioFimSemana"
+                                                           required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h3 class="uk-accordion-title">Funcionamento no Fim de Semana</h3>
+                                    <div class="uk-accordion-content">
+                                        <div class="uk-grid" data-uk-grid-margin>
+                                            <div class="uk-width-medium-1-2">
+                                                <div class="uk-input-group">
+                                                    <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                    <label for="nome">Inicio<span class="req">*</span></label>
+                                                    <input class="md-input" type="text" id="horarioInicioFds" data-uk-timepicker md-input ng-model="unidade.horarioInicioFds"
+                                                           required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                                </div>
+                                            </div>
+                                            <div class="uk-width-medium-1-2">
+                                                <div class="uk-input-group">
+                                                    <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                    <label for="nome">Fim<span class="req">*</span></label>
+                                                    <input class="md-input" type="text" id="horarioFimFds" data-uk-timepicker md-input ng-model="unidade.horarioFimFds"
+                                                           required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-if="unidade.delivery" >
+                                        <h3 class="uk-accordion-title">Delivery durante a Semana</h3>
+                                        <div class="uk-accordion-content">
+
+                                            <div class="uk-grid" data-uk-grid-margin>
+                                                <div class="uk-width-medium-1-2">
+                                                    <div class="uk-input-group">
+                                                        <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                        <label for="nome">Inicio<span class="req">*</span></label>
+                                                        <input class="md-input" type="text" id="horarioInicioSemana" data-uk-timepicker md-input ng-model="unidade.horarioInicioSemanaDelivery"
+                                                               required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                                                    </div>
+                                                </div>
+                                                <div class="uk-width-medium-1-2">
+                                                    <div class="uk-input-group">
+                                                        <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                        <label for="nome">Fim<span class="req">*</span></label>
+                                                        <input class="md-input" type="text" id="horarioFimSemana" data-uk-timepicker md-input ng-model="unidade.horarioFimSemanaDelivery" 
+                                                               required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <h3 class="uk-accordion-title">Delivery no Fim de Semana</h3>
+                                        <div class="uk-accordion-content">
+
+                                            <div class="uk-grid" data-uk-grid-margin>
+                                                <div class="uk-width-medium-1-2">
+                                                    <div class="uk-input-group">
+                                                        <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                        <label for="nome">Inicio<span class="req">*</span></label>
+                                                        <input class="md-input" type="text" id="horarioInicioFds" data-uk-timepicker md-input ng-model="unidade.horarioInicioFdsDelivery"
+                                                               required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                                    </div>
+                                                </div>
+                                                <div class="uk-width-medium-1-2">
+                                                    <div class="uk-input-group">
+                                                        <span class="uk-input-group-addon"><i class="uk-input-group-icon uk-icon-clock-o"></i></span>
+                                                        <label for="nome">Fim<span class="req">*</span></label>
+                                                        <input class="md-input" type="text" id="horarioFimFds" data-uk-timepicker md-input ng-model="unidade.horarioFimFdsDelivery"
+                                                               required data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </v-page>
+                            <v-page>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-1">
+                                        <div class="parsley-row">
+                                            <div class="uk-file-upload" style="padding: 1.5% 1.5%;">
+                                                <div ng-model="unidade.cartaoCnpj" ngf-select
+                                                     ngf-drop="" ng-model="unidade.cartaoCnpj" 
+                                                     ngf-max-size="1MB" 
+                                                     ngf-pattern="'image/*,application/pdf'"
+                                                     ngf-change="uploadCNPJ($file, $invalidFiles)"
+                                                     class="drop-box" 
+                                                     id="file_upload-drop">
+                                                    <p class="uk-text">Arraste o Cartão CNPJ aqui </p>
+                                                    <p class="uk-text-muted uk-text-small uk-margin-small-bottom">ou</p>
+                                                    <span class="uk-form-file md-btn">Selecione<input id="fileCartaoCnpj" type="file"  ng-model="unidade.cartaoCnpj"></span>
+                                                    <div ng-show="unidade.cartaoCnpj">
+                                                        <p class="uk-text-muted uk-text-small uk-margin-small-bottom" style="padding-top: 4%;">
+                                                            <a ng-click="$event.stopPropagation();showFile('cartaoCnpj');" >Visualizar</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-1">
+                                        <div class="parsley-row">
+                                            <div class="uk-file-upload" style="padding: 1.5% 1.5%;">
+                                                <div ng-model="unidade.fichaCadastral" ngf-select
+                                                     ngf-drop="" ng-model="unidade.fichaCadastral" 
+                                                     ngf-max-size="1MB" 
+                                                     ngf-pattern="'image/*,application/pdf'"
+                                                     ngf-change="uploadFicha($file, $invalidFiles)"
+                                                     class="drop-box" 
+                                                     id="file_upload-drop">
+                                                    <p class="uk-text">Arraste a Ficha Cadastral aqui </p>
+                                                    <p class="uk-text-muted uk-text-small uk-margin-small-bottom">ou</p>
+                                                    <span class="uk-form-file md-btn">Selecione<input id="fileFichaCadastral" type="file" ng-model="unidade.fichaCadastral"></span>
+                                                    <div ng-show="unidade.fichaCadastral">
+                                                        <p class="uk-text-muted uk-text-small uk-margin-small-bottom" style="padding-top: 4%;">
+                                                            <a ng-click="$event.stopPropagation();showFile('fichaCadastral');" >Visualizar</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-1">
+                                        <div class="parsley-row">
+                                            <div class="uk-file-upload" style="padding: 1.5% 1.5%;">
+                                                <div ng-model="unidade.recibo" ngf-select
+                                                     ngf-drop="" ng-model="unidade.recibo" 
+                                                     ngf-max-size="1MB" 
+                                                     ngf-pattern="'image/*,application/pdf'"
+                                                     ngf-change="uploadRecibo($file, $invalidFiles)"
+                                                     class="drop-box" 
+                                                     id="file_upload-drop">
+                                                    <p class="uk-text">Arraste o Recibo Aqui</p>
+                                                    <p class="uk-text-muted uk-text-small uk-margin-small-bottom">ou</p>
+                                                    <span class="uk-form-file md-btn">Selecione<input id="fileRecibo" type="file" ng-model="unidade.recibo"></span>
+                                                    <div ng-show="unidade.recibo">
+                                                        <p class="uk-text-muted uk-text-small uk-margin-small-bottom" style="padding-top: 4%;">
+                                                            <a ng-click="$event.stopPropagation();showFile('recibo');" >Visualizar</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="uk-grid" data-uk-grid-margin>
+                                    <div class="uk-width-medium-1-1">
+                                        <div class="parsley-row">
+                                            <div class="uk-file-upload" style="padding: 1.5% 1.5%;">
+                                                <div ng-model="unidade.contratoSocial" ngf-select
+                                                     ngf-drop="" ng-model="unidade.contratoSocial" 
+                                                     ngf-max-size="1MB" 
+                                                     ngf-pattern="'image/*,application/pdf'"
+                                                     ngf-change="uploadContrato($file, $invalidFiles)"
+                                                     class="drop-box" 
+                                                     id="file_upload-drop">
+                                                    <p class="uk-text">Arraste o Contrato Social Aqui</p>
+                                                    <p class="uk-text-muted uk-text-small uk-margin-small-bottom">ou</p>
+                                                    <span class="uk-form-file md-btn">Selecione<input id="fileContratoSocial" type="file" ng-model="unidade.contratoSocial"></span>
+
+                                                    <div ng-show="unidade.contratoSocial">
+                                                        <p class="uk-text-muted uk-text-small uk-margin-small-bottom" style="padding-top: 4%;">
+                                                            <a ng-click="$event.stopPropagation();showFile('contratoSocial');" >Visualizar</a></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </v-page>
+                        </v-pages>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div ng-show="!showForm" class="md-fab-wrapper">
+        <a class="md-fab md-fab-acaibeat-verde" ng-click="novo()"
+           data-uk-modal="{target:'#modalCadastroUnidade'}"> <i
+                class="material-icons">&#xE145;</i>
+        </a>
+    </div>
+    <div id="modalVisualizacaoDocumento" class="uk-modal">
+        <div class="uk-modal-dialog uk-modal-dialog-lightbox" ng-if="file != null">
+            <button type="button" class="uk-modal-close uk-close uk-close-alt"></button>
+            <img ng-if="file.img && file.base64" ng-src="{{file.base64}}" alt=""/>
+            <object ng-if="!file.img && file.base64" data="{{file.base64}}" type="application/pdf" style="width: 100%; height: 400px;"></object>
+        </div>
+    </div>

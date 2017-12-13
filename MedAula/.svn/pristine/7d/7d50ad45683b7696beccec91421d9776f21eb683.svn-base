@@ -1,0 +1,29 @@
+package br.com.ibebidas.service.impl;
+
+
+
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.StatusDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+
+import br.com.ibebidas.entity.Status;
+
+import br.com.ibebidas.service.StatusService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+
+public class StatusServiceImpl extends BaseServiceImpl<Status> implements StatusService{
+
+	@Inject
+	private StatusDAO statusDao;
+
+	@Override
+	public BaseDAO<Status> getDAO() {
+		return statusDao;
+	}
+
+}

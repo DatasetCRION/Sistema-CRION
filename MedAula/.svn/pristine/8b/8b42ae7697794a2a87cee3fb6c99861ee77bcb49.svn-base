@@ -1,0 +1,125 @@
+package br.com.ibebidas.resource;
+
+import java.util.List;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
+
+import br.com.ibebidas.config.Constantes;
+import br.com.ibebidas.entity.FormaPagamentoParceiro;
+import br.com.ibebidas.entity.Parceiro;
+import br.com.ibebidas.service.EnderecoService;
+import br.com.ibebidas.service.ParceiroService;
+import br.com.ibebidas.util.Util;
+
+@Path(value="/parceiro")
+@Produces("application/json; charset=UTF-8")
+public class ParceiroResource {
+	
+	@Inject private ParceiroService parceiroService;
+	
+	@Inject
+    private EnderecoService enderecoService;
+	
+	@GET
+	@Transactional
+	public List<Parceiro> getParceiros(){
+		
+		try{
+			return parceiroService.findAll();
+			
+		}catch(Exception e){
+			Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			throw new WebApplicationException(response);
+		}
+		
+	}
+	
+	
+	@GET
+	@Transactional
+	@Path("{id}")
+	public Parceiro getParceiro(@PathParam("id") Long id){
+		
+		try{
+			return parceiroService.findById(id);
+		}catch(Exception e){
+			Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			throw new WebApplicationException(response);
+		}
+		
+	}
+	
+	@GET
+	@Transactional
+	@Path("meusdados")
+	public Parceiro meusDados(){
+		
+		try{
+			return parceiroService.findById(parceiroService.getUsuarioLogado().getId());
+		}catch(Exception e){
+			Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+			throw new WebApplicationException(response);
+		}
+		
+	}
+	
+	@DELETE
+	@Transactional
+	@Path(value="{id}")
+	public Response remover(@PathParam("id") Long id){
+		
+		try {
+			parceiroService.deleteById(id);
+			return Response.ok(new Object(){ 
+				@SuppressWarnings("unused")
+				public String msg = Constantes.REGISTRO_REMOVIDO_SUCESSSO; 
+				@SuppressWarnings("unused")
+				public int status = Response.Status.OK.getStatusCode();
+			}).build();
+			
+		} catch (Exception e) {
+			ResponseBuilder rb = Response.status(Response.Status.BAD_REQUEST.getStatusCode());
+			rb = rb.entity(new Object(){@SuppressWarnings("unused")
+			public String msg = Constantes.REGISTRO_POSSUI_DEPENDENCIAS;});
+			return rb.build();
+		}
+	}
+	
+	
+	@POST
+	@Transactional
+	public Parceiro salvarParceiro(Parceiro parceiro){
+		try {
+            if (parceiro.getEndereco() != null) {
+            	parceiro.setEndereco(enderecoService.saveOrUpdate(parceiro.getEndereco()));
+            }
+            
+            if (parceiro.getId() == null) {
+            	parceiro.setSenha(Util.StringToMD5(parceiro.getSenha()));
+            } else if (parceiro.getNovaSenha() != null && !parceiro.getNovaSenha().equals("")) {
+            	parceiro.setSenha(Util.StringToMD5(parceiro.getNovaSenha()));
+            }
+            
+            for(FormaPagamentoParceiro f : parceiro.getFormaPagamentoParceiro()){
+            	f.setParceiro(parceiro);
+            }
+            
+            return parceiroService.saveOrUpdate(parceiro);
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+	}
+	
+}

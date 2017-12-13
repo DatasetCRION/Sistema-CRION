@@ -1,0 +1,27 @@
+package br.com.ibebidas.service.impl;
+
+import java.util.List;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.EstadoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.Estado;
+import br.com.ibebidas.service.EstadoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class EstadoServiceImpl extends BaseServiceImpl<Estado> implements EstadoService {
+@Inject private EstadoDAO dao;
+	
+	@Override
+	public BaseDAO<Estado> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+
+	}
+
+	public List<Estado> getEstadosBrasil() {
+		// TODO Auto-generated method stub
+		return dao.getEstadosBrasil();
+	}
+}

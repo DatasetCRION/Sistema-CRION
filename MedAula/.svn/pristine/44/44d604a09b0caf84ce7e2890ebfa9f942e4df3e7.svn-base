@@ -1,0 +1,123 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Pedidos</h3>
+                    <div class="md-card-toolbar-actions">
+                        <i class="md-icon material-icons" data-uk-tooltip title="Atualizar" 
+                           id="toggleAll" ng-click="atualizar()">&#xE5D5;</i>
+                    </div>
+                </div>
+
+                <div class="md-card-content padding-reset" id="help_content">
+                    <table datatable="ng" class="uk-table" dt-instance="dtInstance"
+                           dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+                        <thead>
+                            <tr>
+                                <td style="width: 25%">Cliente</td>
+                                <td style="width: 20%">Data Pedido</td>
+                                <td style="width: 15%">Valor total</td>
+                                <td style="width: 20%">Status</td>
+                                <td style="width: 10%">Ações</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in listPedidos" ng-click="visualizar($index)"
+                                data-uk-modal="{target:'#modalPedido'}">
+                                <td>{{item.cliente.nome}}</td>
+                                <td>{{item.dataPedido | date:"dd/MM/yyyy"}}</td>
+                                <td>{{item.valorTotal | finance:true:2}}</td>
+                                <td>{{item.status.nome}}</td>
+                                <td>
+                                    <a   title="Visualizar">
+                                        <i class="material-icons">&#xE8B6;</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalPedido" class="uk-modal">
+    <div class="uk-modal-dialog">
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">Detalhe do Pedido</h3>
+        </div>
+        <b>Local de Entrega: </b> {{pedido.endereco.logradouro}}, {{pedido.endereco.numero}} - {{pedido.endereco.bairro}}, {{pedido.endereco.cidade}} - {{pedido.endereco.uf}}
+
+        <table class="uk-table">
+            <thead>
+                <tr>
+                    <td style="width: 25%">Produto</td>
+                    <td style="width: 25%">Categoria</td>
+                    <td style="width: 15%">Valor</td>
+                    <td style="width: 10%">Quantidade</td>
+                    <td style="width: 15%">Valor Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in pedido.produtoPedido">
+                    <td>{{item.produto.nome}}</td>
+                    <td>{{item.produto.tipoCategoria.categoria.nome}}</td>
+                    <td>{{item.preco | finance:true:2 }}</td>
+                    <td>{{item.quantidade}}</td>
+                    <td>{{item.preco*item.quantidade | finance:true:2}}</td>
+                </tr>
+                <tr>
+                    <td><b>Total</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>{{valorSum(pedido.produtoPedido)| finance:true:2}}</b></td>
+                </tr>
+            </tbody>
+        </table>
+        <div ng-if="! ((pedido.status.nome.toLowerCase() === 'entregue') || (pedido.status.nome.toLowerCase() === 'cancelado'))" 
+             class="uk-grid" data-uk-grid-margin="">
+            <div class="uk-width-medium-1-2">
+                <a class="md-btn md-btn-block"
+                   ng-click="cancelarPedido()">Cancelar Pedido</a>
+            </div>
+            <div class="uk-width-medium-1-2">
+                <a class="md-btn md-btn-primary md-btn-block"
+                   ng-click="saveStatus();">{{getTxtStatus()}}</a>
+            </div>
+        </div>
+        <div ng-if="(pedido.status.nome.toLowerCase() === 'cancelado')" class="uk-grid" data-uk-grid-margin="">
+             <div class="uk-width-medium-1-1">
+                <div class="md-btn md-btn-primary md-btn-block"
+                   >Pedido Cancelado</div>
+            </div>
+        </div>
+        <div ng-if="!(pedido.status.nome.toLowerCase() === 'cancelado')" class="uk-grid" data-uk-grid-margin="">
+            <div class="uk-width-medium-1-1">
+                <ul ng-if="pedido.id"class="progress-indicator">
+                    <li ng-class="status(1);" >
+                        <span ng-click="" class="bubble"></span>
+                        <b>Solicitado</b>
+                    </li>
+                    <li ng-class="status(2);">
+                        <span ng-click="" class="bubble"></span>
+                        <b>Confirmado</b>
+                    </li>
+                    <li ng-class="status(3);">
+                        <span ng-click="" class="bubble"></span>
+                        Em Rota
+                    </li>
+                    <li ng-class="status(4);">
+                        <span ng-click="" class="bubble"></span>
+                        Entregue
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>

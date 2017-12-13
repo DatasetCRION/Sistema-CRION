@@ -1,0 +1,113 @@
+package br.com.ibebidas.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import br.com.ibebidas.entity.Produto;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import br.com.ibebidas.entity.base.BaseEntityImpl;
+
+@Entity
+@Table(name = "tb_produto_pedido")
+public class ProdutoPedido extends BaseEntityImpl<ProdutoPedido> {
+
+    private static final long serialVersionUID = -90563202302656760L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "preco")
+    private Float preco;
+
+    @Column(name = "quantidade")
+    private Long quantidade;
+
+    @ManyToOne
+    @JoinColumn(name = "id_produto")
+    private Produto produto;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "id_pedido")
+    private Pedido pedido;
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the preco
+     */
+    public Float getPreco() {
+        return preco;
+    }
+
+    /**
+     * @param preco the preco to set
+     */
+    public void setPreco(Float preco) {
+        this.preco = preco;
+    }
+
+    /**
+     * @return the quantidade
+     */
+    public Long getQuantidade() {
+        return quantidade;
+    }
+
+    /**
+     * @param quantidade the quantidade to set
+     */
+    public void setQuantidade(Long quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    /**
+     * @return the produto
+     */
+    public Produto getProduto() {
+        return produto;
+    }
+
+    /**
+     * @param produto the produto to set
+     */
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    /**
+     * @return the pedido
+     */
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    /**
+     * @param pedido the pedido to set
+     */
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+}

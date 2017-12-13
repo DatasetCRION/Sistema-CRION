@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Context reloadable="true" crossContext="true">
+	<Resource 
+	    auth="Container" 
+	    name="jdbc/medaula" 
+	    type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://localhost:3306/medaula" 
+		username="root"
+		password="" 
+		minActive="1" 
+		maxActive="100" 
+		maxIdle="5" 
+		maxWait="1000"
+		removeAbandoned="true" 
+		removeAbandonedTimeout="300" 
+		logAbandoned="false"
+		initialSize="8" 
+		testOnBorrow="true"
+		testWhileIdle="true" 
+		timeBetweenEvictionRunsMillis="10000"
+		minEvictableIdleTimeMillis="60000"
+		factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory" />
+</Context>
+
+<!--		url="jdbc:mysql://201.73.145.70:3306/medaula" 
+		username="medaula"
+		password="medAula@lemon" -->

@@ -1,0 +1,50 @@
+             READ ME - REST PROJECT
+###################################################
+#  Application Interoperability with Web Services #
+#                                                 #
+#   VINICIUS FERREIRA SALGADO - 27/01/2017        #
+#   FRANCISCO GONZALEZ                            #
+#                                                 #
+###################################################
+   
+USING PROGRAMS
+
+-NETBEANS
+-WAMPSERVER
+-MySQL Workbench
+-Tomcat 7
+-Maven
+
+
+This READ ME detailled how to install it and run it this project.
+
+1 - First off all you install Tomcat7 and Maven.
+
+2 - You have the File with code of Database with you, the name is 'medaula'.
+
+		'CREATE database medaula...'   
+
+		Install Wampserver and MySQL Workbench (optional to you) to work with Database.
+
+		Copy the File in MySQL Workbench an Run.
+
+		Now you have your Database. 
+
+3 - After you open the CMD and direct to File project. (Ex: C:\Users\Vinícius\Documents\MedAula\trunk\med-aula) 
+
+		Run the code 
+
+		- mvn clean install
+
+		After in the same File you start the server with
+
+		- mvn tomcat7:run
+
+		Now you have youy server.
+
+4 - Go to your WEB BROWSER and put
+
+		localhost:8085/med-aula-administrador
+
+		And you have the project working.
+

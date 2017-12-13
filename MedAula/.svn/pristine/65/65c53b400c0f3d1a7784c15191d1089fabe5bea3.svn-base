@@ -1,0 +1,48 @@
+<div id="page_content">
+	<div id="page_content_inner">
+
+		<div class="uk-width-medium-9-10 uk-container-center">
+
+			<div class="md-card md-card-single" single-card>
+				<div class="md-card-toolbar">
+					<h3 class="md-card-toolbar-heading-text large">Produtos</h3>
+						<div class="md-card-toolbar-actions">
+						<i class="md-icon material-icons" data-uk-tooltip title="Salvar"
+							id="toggleAll" ng-click="salvar()"
+							data-uk-modal="{target:'#modalProduto'}">&#xE161;</i>
+					</div>
+				</div>
+				<div class="md-card md-card-single" single-card>
+
+					<div class="md-card-content padding-reset" id="help_content">
+						<table  datatable="ng" class="uk-table" dt-instance="dtInstance"
+						dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+							<thead>
+								<th style="width: 10%">Ações</th>
+								<th style="width: 20%">Produto</th>
+								<th style="width: 25%">Detalhamento</th>
+								<th style="width: 15%">Categoria</th>
+								<th style="width: 15%">Tipo Categoria</th>
+								<th style="width: 15%">Origem</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in listProduto" data-uk-modal="{target:'#modalProduto'}" ng-click="editar(item.id)">
+									
+									<td><div class="uk-input-group">
+                                            <input type="checkbox" name="checkbox" id="checkbox" icheck ng-model="checkbox"/>
+                                        </div></td>
+									<td>{{item.nome}}</td>
+									<td>{{item.detalhamento}}</td>
+									<td>{{item.tipoCategoria.categoria.nome}}</td>
+									<td>{{item.tipoCategoria.nome}}</td>
+									<td>{{item.origem.nome}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

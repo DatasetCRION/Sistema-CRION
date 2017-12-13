@@ -1,0 +1,10 @@
+package br.com.ibebidas.dao.impl;
+
+import br.com.ibebidas.dao.ProdutoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Produto;
+
+public class ProdutoDAOImpl extends BaseDAOImpl<Produto> implements ProdutoDAO{
+
+
+}

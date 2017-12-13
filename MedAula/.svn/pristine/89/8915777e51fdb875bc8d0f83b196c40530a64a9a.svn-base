@@ -1,0 +1,9 @@
+package br.com.ibebidas.dao.impl;
+
+import br.com.ibebidas.dao.FormaPagamentoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.FormaPagamento;
+
+public class FormaPagamentoDAOImpl extends BaseDAOImpl<FormaPagamento> implements FormaPagamentoDAO{
+
+}

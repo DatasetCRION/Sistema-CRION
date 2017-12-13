@@ -1,0 +1,5 @@
+app.controller('ctrl_principal', function($scope,$rootScope,$timeout,$interval, genericService){
+	
+	var ng = $scope;
+	
+});

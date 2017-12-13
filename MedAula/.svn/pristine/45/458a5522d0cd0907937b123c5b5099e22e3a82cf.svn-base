@@ -1,0 +1,105 @@
+package br.com.ibebidas.entity;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import br.com.ibebidas.entity.base.BaseEntityImpl;
+
+
+@Entity
+@Table(name="tb_preco")
+public class Preco extends BaseEntityImpl<Preco> {
+
+	private static final long serialVersionUID = -90563202302656760L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
+	private Long id;
+	
+	@Column (name="atualizacao")
+	private Date atualizacao;
+
+	@Column(name="preco")
+	private Float preco;
+	
+	@Column(name="preco_promocional")
+	private Float precoPromocional;
+
+	@Column(name="ativar_promocional")
+	private int ativarPromocional;
+
+	@ManyToOne
+	@JoinColumn(name="id_produto")
+	private Produto produto;
+	
+	@ManyToOne
+	@JoinColumn(name="id_parceiro")
+	private Parceiro parceiro;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Float getPreco() {
+		return preco;
+	}
+
+	public void setPreco(Float preco) {
+		this.preco = preco;
+	}
+
+	public Date getAtualizacao() {
+		return atualizacao;
+	}
+
+	public void setAtualizacao(Date atualizacao) {
+		this.atualizacao = atualizacao;
+	}
+
+	public Float getPrecoPromocional() {
+		return precoPromocional;
+	}
+
+	public void setPrecoPromocional(Float precoPromocional) {
+		this.precoPromocional = precoPromocional;
+	}
+
+	public int getAtivarPromocional() {
+		return ativarPromocional;
+	}
+
+	public void setAtivarPromocional(int ativarPromocional) {
+		this.ativarPromocional = ativarPromocional;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public Parceiro getParceiro() {
+		return parceiro;
+	}
+
+	public void setParceiro(Parceiro parceiro) {
+		this.parceiro = parceiro;
+	}
+
+	
+}

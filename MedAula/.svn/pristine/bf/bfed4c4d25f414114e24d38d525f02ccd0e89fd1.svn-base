@@ -1,0 +1,11 @@
+package br.com.ibebidas.dao.impl;
+
+
+import br.com.ibebidas.dao.StatusDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Status;
+
+public class StatusDAOImpl extends BaseDAOImpl<Status> implements StatusDAO {
+
+
+}

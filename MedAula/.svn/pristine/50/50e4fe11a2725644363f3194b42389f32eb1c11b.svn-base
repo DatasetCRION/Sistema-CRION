@@ -1,0 +1,119 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Pedidos</h3>
+                    <div class="md-card-toolbar-actions">
+                        <i class="md-icon material-icons" data-uk-tooltip title="Atualizar" 
+                           id="toggleAll" ng-click="atualizar()">&#xE5D5;</i>
+                    </div>
+                </div>
+
+                <div class="md-card-content padding-reset" id="help_content">
+                    <table datatable="ng" class="uk-table" dt-instance="dtInstance"
+                           dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+                        <thead>
+                            <tr>
+                                <td style="width: 35%">Cliente</td>
+                                <td style="width: 25%">Data Pedido</td>
+                                <td style="width: 15%">Valor total</td>
+                                <td style="width: 15%">Status</td>
+                                <td style="width: 10%">Ações</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in listPedidos"
+                                data-uk-modal="{target:'#modalFabricaPedido'}">
+                                <td>{{item.cliente.nome}}</td>
+                                <td>{{item.dataPedido | date:"dd/MM/yyyy"}}</td>
+                                <td>{{item.valorTotal | finance:true:2}}</td>
+                                <td>{{item.status}}</td>
+                                <td>
+                                    <a  ng-click="visualizar($index)" title="Visualizar">
+                                        <i class="material-icons">&#xE8B6;</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalFabricaProduto" class="uk-modal">
+    <div class="uk-modal-dialog">
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">Detalhe do Pedido</h3>
+        </div>
+
+        <!--            <div ng-repeat="item in pedido.pedidoProduto" class="uk-grid" data-uk-grid-margin>
+                        <div class="uk-width-medium-1-1">
+                            <div class="parsley-row">
+                                {{item.produto.nome}}
+                                {{item.quantidade}}
+                                aaaaaaaaa
+                            </div>
+                        </div>			
+                    </div>-->
+
+        <table class="uk-table">
+            <thead>
+                <tr>
+                    <td style="width: 25%">Produto</td>
+                    <td style="width: 25%">Categoria</td>
+                    <td style="width: 15%">Valor</td>
+                    <td style="width: 10%">Quantidade</td>
+                    <td style="width: 15%">Valor Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in pedido.pedidoProduto">
+                    <td>{{item.produto.descricao}}</td>
+                    <td>{{item.produto.categoria.descricao}}</td>
+                    <td>{{item.produto.valor | finance:true:2 }}</td>
+                    <td>{{item.quantidade}}</td>
+                    <td>{{item.produto.valor*item.quantidade | finance:true:2}}</td>
+                </tr>
+                <tr>
+                    <td><b>Total</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><b>{{valorSum(pedido.pedidoProduto)| finance:true:2}}</b></td>
+                </tr>
+                <tr ng-if="pedido.feedback">
+                    <td><b>Feedback</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><i>{{pedido.feedback}}</i></td>
+                    
+                </tr>
+            </tbody>
+        </table>
+        <ul ng-if="pedido.id"class="progress-indicator">
+            <li ng-class="status(1);" >
+                <span ng-click="getIdStatus('pendente',saveStatus);" class="bubble"></span>
+                <b>Pendente</b>
+            </li>
+            <li ng-class="status(2);">
+                <span ng-click="getIdStatus('aceito',saveStatus);" class="bubble"></span>
+               <b> Aceito</b>
+            </li>
+            <li ng-class="status(3);">
+                <span ng-click="getIdStatus('enviado',saveStatus);" class="bubble"></span>
+                Enviado
+            </li>
+            <li ng-class="status(4);">
+                <span ng-click="getIdStatus('entregue',saveStatus);" class="bubble"></span>
+                Entregue
+            </li>
+        </ul>
+    </div>
+
+</div>

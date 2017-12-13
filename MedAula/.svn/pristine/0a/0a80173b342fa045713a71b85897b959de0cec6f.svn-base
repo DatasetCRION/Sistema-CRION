@@ -1,0 +1,141 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Usuários</h3>
+                </div>
+
+                <div class="md-card-content padding-reset" id="help_content">
+                    <table datatable="ng" class="uk-table" dt-instance="dtInstance"
+                           dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+                        <thead>
+                            <tr>
+                                <td>Nome</td>
+                                <td>E-mail</td>
+                                <td>Perfil</td>
+                                <td>Ações</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in listUsuarios" data-uk-modal="{target:'#modalCadastroUsuario'}" ng-click="editar(item.id)">
+                                <td>{{item.nome}}</td>
+                                <td>{{item.email}}</td>
+                                <td>{{item.perfil.nome}}</td>
+                                <td>
+                                    <a data-uk-modal="{target:'#modalCadastroUsuario'}" title="Editar"><i class="material-icons">&#xE150;</i></a>
+                                    <a  title="Remover"ng-click="remover(item.id);$event.stopPropagation();"><i class="material-icons">&#xE872;</i></a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="md-fab-wrapper">
+    <a class="md-fab md-ibebidas-preto" ng-click="novo()"
+       data-uk-modal="{target:'#modalCadastroUsuario'}"> <i
+            class="material-icons">&#xE145;</i>
+    </a>
+</div>
+<div id="modalCadastroUsuario" class="uk-modal">
+    <div class="uk-modal-dialog">
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">{{usuario.id ? 'Editar Usuário'
+                : 'Cadastro de Usuário'}}</h3>
+        </div>
+
+
+        <form id="form_usuario" class="uk-form-stacked" ng-if="showForm"
+              ng-init="inicializaForm()">
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-2">
+                    <div class="parsley-row">
+                        <label for="nome">Nome<span class="req">*</span></label> <input
+                            class="md-input md-input-success" type=text id="nome" name="nome"
+                            ng-model="usuario.nome" md-input required
+                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                    </div>
+                </div>
+
+                <div class="uk-width-medium-1-2">
+                    <div class="parsley-row">
+                        <label for="nome">Email<span class="req">*</span></label> <input
+                            class="md-input md-input-success" type=text id="email"
+                            name="email" ng-model="usuario.email" md-input required
+                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+                    <div class="parsley-row">
+                        <label for="perfil" class="uk-form-label">Perfil<span class="req">*</span>
+                        </label> <input type="text" config="perfisConfig"
+                                        options="listPerfis" ng-model="usuario.perfil.id" 
+                                        name="perfil" selectize required
+                                        data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}"/>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-2" ng-if="usuario.id == null">
+                    <div class="parsley-row">
+                        <label for="nome">Senha<span class="req">*</span></label> <input
+                            class="md-input md-input-success" type="password"
+                            id="senha" name="senha"
+                            ng-model="usuario.senha" md-input required
+                            data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2" ng-if="usuario.id == null">
+                    <div class="parsley-row">
+                        <label for="nome">Confirmação de senha<span class="req">*</span></label>
+                        <input class="md-input md-input-success" type="password"
+                               id="confSenha" name="confSenha"
+                               data-parsley-equalto-message="A confirmação da senha não corresponde com a senha"
+                               md-input data-parsley-equalto="#senha"
+                               ng-model="usuario.confSenha" md-input required
+                               data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2" ng-if="usuario.id != null">
+                    <div class="parsley-row">
+                        <label for="nome">Nova Senha</label> <input
+                            class="md-input md-input-success" type="password"
+                            id="novaSenha" name="novaSenha"
+                            ng-model="usuario.novaSenha" md-input 
+                            />
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2" ng-if="usuario.id != null">
+                    <div class="parsley-row">
+                        <label for="nome">Confirmação da nova senha<span ng-if="usuario.novaSenha != null && usuario.novaSenha != ''" class="req">*</span></label>
+                        <input class="md-input md-input-success" type="password"
+                               id="confNovaSenha" name="confNovaSenha"
+                               data-parsley-equalto-message="A confirmação da senha não corresponde com a senha"
+                               md-input data-parsley-equalto="#novaSenha"
+                               ng-model="usuario.confSenha" md-input ng-required="usuario.novaSenha != null && usuario.novaSenha != ''"
+                               data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                    </div>
+                </div>  
+            </div>
+        </form>
+
+        <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="md-btn md-btn-flat uk-modal-close"
+                    ng-click="showForm = false">Cancelar</button>
+            <button ng-click="salvar()" type="button"
+                    class="md-btn md-btn-flat md-btn-flat-primary">Confirmar</button>
+        </div>
+    </div>
+
+</div>

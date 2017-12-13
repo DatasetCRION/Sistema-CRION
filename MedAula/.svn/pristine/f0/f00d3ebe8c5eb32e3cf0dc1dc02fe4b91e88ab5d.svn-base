@@ -1,0 +1,107 @@
+package br.com.ibebidas.entity;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+import br.com.ibebidas.entity.base.BaseEntityImpl;
+
+
+@Entity
+@Table(name="tb_preco")
+public class Preco extends BaseEntityImpl<Preco> {
+
+	private static final long serialVersionUID = -90563202302656760L;
+
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="id")
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name="id_produto_parceiro")
+	private ProdutoParceiro produtoParceiro;
+	
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name="id_embalagem")
+	private Embalagem embalagem;
+	
+	@Column(name="atualizacao")
+    private Date atualizacao;
+	
+	@Column(name="preco")
+    private float preco;
+	
+	@Column(name="preco_promocional")
+    private float precoPromocional;
+	
+	@Column(name="ativar_promocional")
+    private int ativarPromocional;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public ProdutoParceiro getProdutoParceiro() {
+		return produtoParceiro;
+	}
+
+	public void setProdutoParceiro(ProdutoParceiro produtoParceiro) {
+		this.produtoParceiro = produtoParceiro;
+	}
+
+	public Embalagem getEmbalagem() {
+		return embalagem;
+	}
+
+	public void setEmbalagem(Embalagem embalagem) {
+		this.embalagem = embalagem;
+	}
+
+	public Date getAtualizacao() {
+		return atualizacao;
+	}
+
+	public void setAtualizacao(Date atualizacao) {
+		this.atualizacao = atualizacao;
+	}
+
+	public float getPreco() {
+		return preco;
+	}
+
+	public void setPreco(float preco) {
+		this.preco = preco;
+	}
+
+	public float getPrecoPromocional() {
+		return precoPromocional;
+	}
+
+	public void setPrecoPromocional(float precoPromocional) {
+		this.precoPromocional = precoPromocional;
+	}
+
+	public int getAtivarPromocional() {
+		return ativarPromocional;
+	}
+
+	public void setAtivarPromocional(int ativarPromocional) {
+		this.ativarPromocional = ativarPromocional;
+	}
+	
+}

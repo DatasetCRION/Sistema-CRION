@@ -1,0 +1,15 @@
+package br.com.ibebidas.service;
+
+import java.util.List;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.entity.Estado;
+import br.com.ibebidas.service.base.BaseService;
+import br.com.ibebidas.service.impl.EstadoServiceImpl;
+
+@ImplementedBy(EstadoServiceImpl.class)
+public interface EstadoService extends BaseService<Estado>{
+	List<Estado> getEstadosBrasil();
+
+}

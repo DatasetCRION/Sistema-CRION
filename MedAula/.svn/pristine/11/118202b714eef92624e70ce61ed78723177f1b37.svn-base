@@ -1,0 +1,21 @@
+package br.com.ibebidas.service.impl;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.EnderecoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.Endereco;
+import br.com.ibebidas.service.EnderecoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class EnderecoServiceImpl extends BaseServiceImpl<Endereco> implements EnderecoService {
+
+	@Inject private EnderecoDAO dao;
+	
+	@Override
+	public BaseDAO<Endereco> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+	}
+
+}

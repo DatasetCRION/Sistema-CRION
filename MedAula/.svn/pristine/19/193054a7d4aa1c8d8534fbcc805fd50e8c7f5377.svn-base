@@ -1,0 +1,133 @@
+app.controller('ctrl_cadastroHorarioFuncionamento', function($scope,$rootScope,$compile,$timeout,$interval,  genericService,
+												   DTOptionsBuilder, DTColumnDefBuilder,dataTableLanguageService, commonsService, horarioFuncionamento, diaSemana){
+	
+	var ng = $scope;
+	
+	$rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+    
+    ng.showForm = false;
+    $formValidate  = null;
+    
+    ng.service = new genericService("horarioFuncionamento");
+    
+    ng.listHorarioFuncionamento = horarioFuncionamento;
+    ng.listDiaSemana = diaSemana;
+    
+    ng.novo = function(){
+    	ng.horarioFuncionamento = {};
+    	ng.showForm = true;
+    };
+    
+    ng.diaSemanaConfig = {
+            maxItems: 1,
+            placeholder: 'Selecione o dia da semana',
+            valueField: 'id',
+            labelField: 'nome',
+            searchField: 'nome'
+        };
+    
+    ng.salvar = function(){
+    	
+    	
+    	if($formValidate.parsley().validate()){
+    		
+    		ng.service.salvar(ng.horarioFuncionamento, function(response){
+    			UIkit.modal("#modalCadastroHorarioFuncionamento").hide()
+       		 	ng.showForm = false;
+    			ng.getHorarioFuncionamento();
+    			ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+    			
+    		}, function(){
+    			
+    		});
+    		
+    	}else{
+    		ng.alerta(LABEL_ATENCAO,MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS)
+    	}
+    };
+    
+    ng.editar = function(id){
+    	ng.showForm = true;
+    	ng.service.get(id, function(response){
+    		ng.horarioFuncionamento = response;
+ 
+    	});
+    };
+    
+    ng.getDiaSemana = function () {
+        ng.service.getAll(function (response) {
+            ng.listDiaSemana = response;
+        });
+    };
+    
+    ng.remover = function(id){
+    	ng.confirmacao(MSG_CONFIRMACAO_EXCLUSAO, 
+				function(){
+    				ng.service.remover(id, function(response){
+    					ng.sucesso(LABEL_SUCESSO, response.msg);
+    					ng.getHorarioFuncionamento();
+    				}, function(response){
+    					ng.erro(LABEL_ERRO, response.msg)
+    				});
+	   	 		}
+		);
+    };
+    
+    ng.getHorarioFuncionamento = function(){
+    	ng.service.getAll(function(response){
+    	    ng.listHorarioFuncionamento = response;
+    	});
+    };
+    
+    ng.inicializaForm = function(){
+    
+    	
+    	$formValidate = $('#form_horarioFuncionamento');
+        
+        $formValidate
+        .parsley()
+        .on('form:validated',function() {
+            if(!$scope.$$phase) {
+                $scope.$apply();
+            }
+        })
+        .on('field:validated',function(parsleyField) {
+            if($(parsleyField.$element).hasClass('md-input')) {
+                
+                if(!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            }
+      });
+    	
+    };
+    
+	
+	    
+    ng.dtInstance = {};
+    
+    ng.dtOptions = DTOptionsBuilder
+	 .newOptions()
+	 .withPaginationType('full_numbers')
+	 .withOption('initComplete', function() {
+		 $timeout(function() {
+
+	            // md inputs
+	            $compile($('.dt-uikit .md-input'))($scope);
+	        })
+	 }).withLanguage(
+			 dataTableLanguageService.portugues()
+	);
+    
+   
+    
+    ng.dtColumnDefs = [
+                       DTColumnDefBuilder.newColumnDef(3).notSortable()
+      	];
+    
+
+  
+    
+});
+

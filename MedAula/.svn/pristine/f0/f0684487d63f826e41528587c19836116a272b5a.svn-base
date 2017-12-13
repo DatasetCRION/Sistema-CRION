@@ -1,0 +1,20 @@
+package br.com.ibebidas.service.impl;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.ProdutoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.Produto;
+import br.com.ibebidas.service.ProdutoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class ProdutoServiceImpl extends BaseServiceImpl<Produto> implements ProdutoService {
+
+	@Inject private ProdutoDAO dao;
+	
+	@Override
+	public BaseDAO<Produto> getDAO() {
+		return dao;
+	}
+
+}

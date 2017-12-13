@@ -1,0 +1,84 @@
+app.controller('ctrl_produto', function($scope, $rootScope, $compile, $timeout,
+		$interval, genericService, DTOptionsBuilder, DTColumnDefBuilder,
+		dataTableLanguageService, commonsService, produtos) {
+
+	var ng = $scope;
+
+	$rootScope.page_full_height = true;
+	$rootScope.headerDoubleHeightActive = true;
+
+	ng.service = new genericService("produto");
+	ng.serviceProdutoParceiro = new genericService("produtoparceiro");
+
+	ng.listProduto = produtos;
+	ng.produtoSelecionado = [];
+
+	ng.salvar = function() {
+		ng.serviceProdutoParceiro.salvar(ng.produtoSelecionado, function(
+				response) {
+			ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+		}, function() {
+
+		});
+
+	};
+	
+	ng.setProdutoParceiro = function(produto) {
+		var produtoParceiro = {
+			produto : {
+				id : produto.id,
+				nome : produto.nome,
+				detalhamento : produto.detalhamento,
+				origem : {
+					id : produto.origem.id,
+					nome : produto.origem.nome
+				},
+				tipoCategoria : {
+					id : produto.tipoCategoria.id,
+					nome : produto.tipoCategoria.nome,
+					categoria : {
+						id : produto.tipoCategoria.categoria.id,
+						nome : produto.tipoCategoria.categoria.nome
+					}
+				}
+			},
+			parceiro : {
+				id : null
+			},
+			ativo : 1
+		};
+		return produtoParceiro;
+	};
+	
+	ng.adicionar = function() {
+		for ( var i in ng.listProduto) {
+			if (ng.listProduto[i].checked) {
+				ng.produtoSelecionado.push(ng
+						.setProdutoParceiro(ng.listProduto[i]));
+				ng.listProduto[i] = null;
+			}
+		}
+		ng.listProduto = ng.listProduto.filter(Boolean);
+	}
+
+	ng.getProduto = function() {
+		ng.service.getAll(function(response) {
+			ng.listProduto = response;
+		});
+	};
+
+	ng.dtInstance = {};
+
+	ng.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+			'full_numbers').withOption('initComplete', function() {
+		$timeout(function() {
+
+			// md inputs
+			$compile($('.dt-uikit .md-input'))($scope);
+		})
+	}).withLanguage(dataTableLanguageService.portugues());
+
+	ng.dtColumnDefs = [ DTColumnDefBuilder.newColumnDef(2).notSortable() ];
+
+});

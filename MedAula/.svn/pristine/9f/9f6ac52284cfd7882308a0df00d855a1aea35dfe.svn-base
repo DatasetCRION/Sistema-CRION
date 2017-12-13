@@ -1,0 +1,28 @@
+package br.com.ibebidas.service.impl;
+
+import java.util.List;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.DiaSemanaDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.DiaSemana;
+import br.com.ibebidas.service.DiaSemanaService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class DiaSemanaServiceImpl extends BaseServiceImpl<DiaSemana> implements DiaSemanaService {
+
+	@Inject private DiaSemanaDAO dao;
+	
+	@Override
+	public BaseDAO<DiaSemana> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+	}
+
+	public List<DiaSemana> getDiaSemana() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

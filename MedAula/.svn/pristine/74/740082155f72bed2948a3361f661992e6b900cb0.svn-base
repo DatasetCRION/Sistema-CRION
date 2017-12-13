@@ -1,0 +1,16 @@
+package br.com.ibebidas.dao.impl;
+
+import java.util.List;
+
+import br.com.ibebidas.dao.ProdutoParceiroDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.ProdutoParceiro;
+
+public class ProdutoParceiroDAOImpl extends BaseDAOImpl<ProdutoParceiro> implements ProdutoParceiroDAO{
+
+	public List<ProdutoParceiro> findAll(ProdutoParceiro produtoParceiro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

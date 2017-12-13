@@ -1,0 +1,139 @@
+app.controller('ctrl_meusdados', function($scope, $rootScope, $compile,
+		$timeout, $interval, genericService, DTOptionsBuilder,
+		DTColumnDefBuilder, dataTableLanguageService, commonsService, parceiro,
+		estados, tipoPessoa) {
+
+	var ng = $scope;
+
+	$rootScope.page_full_height = true;
+	$rootScope.headerDoubleHeightActive = true;
+
+	ng.showForm = false;
+	$formValidate = null;
+
+	ng.service = new genericService("parceiro");
+
+	ng.listTipoPessoa = tipoPessoa;
+	ng.listEstados = estados;
+	ng.listCidades = [];
+
+	ng.parceiro = parceiro;
+
+	ng.dtInstance = {};
+
+	ng.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+			'full_numbers').withOption('initComplete', function() {
+		$timeout(function() {
+
+			// md inputs
+			$compile($('.dt-uikit .md-input'))($scope);
+		});
+	}).withLanguage(dataTableLanguageService.portugues());
+
+	ng.getParceiro = function() {
+		ng.service.getAll(function(response) {
+			ng.listParceiro = response;
+		});
+	};
+
+	ng.salvar = function() {
+
+		if ($formValidate.parsley().validate()) {
+
+			ng.service.salvar(ng.parceiro, function(response) {
+				UIkit.modal("#modalCadastroMeusDados").hide()
+				ng.showForm = false;
+				ng.getParceiro();
+				ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+			}, function() {
+
+			});
+
+		} else {
+			ng.alerta(LABEL_ATENCAO, MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS)
+		}
+	};
+
+	/*ng.remover = function(id) {
+		ng.confirmacao(MSG_CONFIRMACAO_EXCLUSAO, function() {
+			ng.service.remover(id, function(response) {
+				ng.sucesso(LABEL_SUCESSO, response.msg);
+				ng.getParceiro();
+			}, function(response) {
+				ng.erro(LABEL_ERRO, response.msg);
+			});
+		});
+	};*/
+
+	ng.tipoPessoaConfig = {
+		maxItems : 1,
+		placeholder : 'TipoPessoa',
+		dropdownParent : "body",
+		closeAfterSelect : true,
+		onDropdownClose : function(dropdown) {
+			$(dropdown).prev().find('input').blur();
+		},
+	};
+
+	ng.estadosConfig = {
+		maxItems : 1,
+		placeholder : 'Selecione o estado',
+		valueField : 'uf',
+		labelField : 'nome',
+		searchField : 'nome',
+	};
+
+	ng.cidadesConfig = {
+		create : false,
+		maxItems : 1,
+		placeholder : 'Selecione a cidade',
+		valueField : 'nome',
+		labelField : 'nome',
+		searchField : 'nome'
+	};
+
+	ng.$watch('parceiro.endereco.uf', function(newValue) {
+
+		ng.listCidades = [];
+		if (newValue) {
+			commonsService.getCidades(newValue, function(response) {
+				ng.listCidades = response;
+			});
+		}
+	});
+
+	ng.preencheEndereco = function(cep) {
+		if (cep && cep.length == 8) {
+			commonsService.getEnderecoByCep(cep, function(response) {
+				if (response) {
+					ng.parceiro.endereco.logradouro = response.logradouro;
+					ng.parceiro.endereco.bairro = response.bairro;
+					ng.parceiro.endereco.uf = response.uf;
+					ng.parceiro.endereco.cidade = response.localidade;
+				}else{
+                                    ng.parceiro.endereco.cep = "";
+                                }
+			});
+		}
+	};
+
+	ng.inicializaForm = function() {
+
+		$formValidate = $('#form_meusdados');
+
+		$formValidate.parsley().on('form:validated', function() {
+			if (!$scope.$$phase) {
+				$scope.$apply();
+			}
+		}).on('field:validated', function(parsleyField) {
+			if ($(parsleyField.$element).hasClass('md-input')) {
+
+				if (!$scope.$$phase) {
+					$scope.$apply();
+				}
+			}
+		});
+
+	};
+});

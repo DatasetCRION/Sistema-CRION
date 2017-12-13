@@ -1,0 +1,211 @@
+app.controller('ctrl_pedidosConcluidos', function ($scope,
+        $rootScope, $compile, $timeout, $interval, genericService,
+        DTOptionsBuilder, DTColumnDefBuilder, dataTableLanguageService, pedidoService, commonsService, pedidos, status) {
+
+    var ng = $scope;
+
+    $rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+
+    ng.showForm = false;
+    $formValidate = null;
+    ng.listPedidos = pedidos;
+    ng.listStatus = status;
+    ng.dtInstance = {};
+
+    ng.dtOptions = DTOptionsBuilder
+            .newOptions()
+            .withPaginationType('full_numbers')
+            .withOption('initComplete', function () {
+                $timeout(function () {
+
+                    // md inputs
+                    $compile($('.dt-uikit .md-input'))($scope);
+                });
+            }).withLanguage(
+            dataTableLanguageService.portugues()
+            );
+    ng.service = new genericService("pedido");
+
+    ng.getPedidos = function () {
+        pedidoService.entregue(function (response) {
+            ng.listPedidos = response;
+        });
+    };
+    ng.atualizar = function () {
+        ng.getPedidos();
+    };
+    ng.valorSum = function (array) {
+        if (!array)
+            return;
+        var sum = 0;
+        array.forEach(function (key) {
+            sum += key.preco * key.quantidade;
+        });
+        return sum;
+    };
+    ng.saveStatus = function () {
+        ng.confirmacao(MSG_CONFIRMACAO_AlTERACAO_STATUS,
+                function () {
+                    console.log("Alterou Status");
+                    var saveNext = function (id) {
+                        ng.pedido.status = {id: id};
+                        ng.service.salvar(ng.pedido, function (response) {
+                            ng.pedido = response;
+                            ng.getPedidos();
+                            console.log(ng.pedido);
+                        }, function () {
+
+                        });
+                    };
+                    console.log(ng.pedido.status.nome);
+                    switch (ng.pedido.status.nome.toLowerCase()) {
+                        case "solicitado":
+                            ng.getIdStatus('confirmado', saveNext);
+                            break;
+                        case "confirmado":
+                            ng.getIdStatus('em rota', saveNext);
+                            break;
+                        case "em rota":
+                            ng.getIdStatus('entregue', saveNext);
+                            break;
+                    }
+
+                }
+        );
+    };
+    ng.cancelarPedido = function () {
+        ng.confirmacao(MSG_CONFIRMACAO_CANCELAMENTO_STATUS,
+                function () {
+                    ng.getIdStatus('cancelado', function (id) {
+                        ng.pedido.status = {id: id};
+                        ng.service.salvar(ng.pedido, function (response) {
+                            ng.pedido = response;
+                            ng.getPedidos();
+                        }, function () {
+
+                        });
+                    });
+
+                }
+        );
+    };
+    ng.getIdStatus = function (status, callback) {
+        ng.listStatus.forEach(function (key) {
+            if (key.nome.toLowerCase() === status)
+                callback(key.id);
+        });
+
+    };
+    ng.getTxtStatus = function () {
+        if (!ng.pedido)
+            return;
+        if (!ng.pedido.status.nome)
+            return;
+        switch (ng.pedido.status.nome.toLowerCase()) {
+            case "solicitado":
+                return "Confirmar Pedido";
+                break;
+            case "confirmado":
+                return "Pedido em Rota ";
+                break;
+            case "em rota":
+                return "Pedido Entregue ";
+                break;
+        }
+    };
+    ng.status = function (status) {
+        if (!ng.pedido)
+            return;
+        var number = 0;
+        if (!ng.pedido.status.nome)
+            return;
+        switch (ng.pedido.status.nome.toLowerCase()) {
+            case "solicitado":
+                number = 1;
+                break;
+            case "confirmado":
+                number = 2;
+                break;
+            case "em rota":
+                number = 3;
+                break;
+            case "entregue":
+                number = 4;
+                break;
+            case "avaliado":
+                number = 4;
+                break;
+        }
+        if (status <= number)
+            return "completed";
+        return "";
+    };
+
+    ng.visualizar = function (index) {
+        ng.pedido = [];
+        UIkit.modal("#modalPedido").show();
+        var item = ng.listPedidos[index];
+        ng.pedido = item;
+        console.log(item);
+    };
+
+    ng.salvar = function () {
+
+        if ($formValidate.parsley().validate()) {
+            usuarioService.validaEmail(ng.usuario.id, ng.usuario.email, function (response) {
+                if (response.valido == "true") {
+                    ng.service.salvar(ng.parceiro, function (response) {
+                        UIkit.modal("#modalMeusPedidos").hide();
+                        ng.showForm = false;
+                        ng.getPedidos();
+                        ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+                    }, function () {
+
+                    });
+                } else {
+                    ng.alerta(LABEL_ERRO, "E-mail já cadastrado");
+                }
+            });
+        } else {
+            ng.alerta(LABEL_ATENCAO, MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS);
+        }
+    };
+
+    ng.remover = function (id) {
+        ng.confirmacao(MSG_CONFIRMACAO_EXCLUSAO,
+                function () {
+                    ng.service.remover(id, function (response) {
+                        ng.sucesso(LABEL_SUCESSO, response.msg);
+                        ng.getPedidos();
+                    }, function (response) {
+                        ng.erro(LABEL_ERRO, response.msg);
+                    });
+                }
+        );
+    };
+
+
+    ng.inicializaForm = function () {
+
+        $formValidate = $('#form_pedido');
+
+        $formValidate
+                .parsley()
+                .on('form:validated', function () {
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                })
+                .on('field:validated', function (parsleyField) {
+                    if ($(parsleyField.$element).hasClass('md-input')) {
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                });
+
+    };
+});

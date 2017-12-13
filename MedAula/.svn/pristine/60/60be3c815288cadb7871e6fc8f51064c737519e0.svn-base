@@ -1,0 +1,128 @@
+package br.com.ibebidas.resource;
+
+import java.util.List;
+
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+
+import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
+
+import br.com.ibebidas.config.Constantes;
+import br.com.ibebidas.entity.Usuario;
+import br.com.ibebidas.service.UsuarioService;
+import br.com.ibebidas.util.Util;
+
+@Path(value = "/usuario")
+@Produces("application/json; charset=UTF-8")
+public class UsuarioResource {
+
+    @Inject
+    private UsuarioService usuarioService;
+
+    @GET
+    @Transactional
+    public List<Usuario> getUsuarios() {
+
+        try {
+            return usuarioService.findAll();
+
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+
+    }
+
+    @GET
+    @Transactional
+    @Path("{id}")
+    public Usuario getUsuario(@PathParam("id") Long id) {
+
+        try {
+            return usuarioService.findById(id);
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+    }
+
+    @POST
+    @Transactional
+    public Usuario salvarUsuario(Usuario usuario) {
+        try {
+            if (usuario.getId() == null) {
+                usuario.setSenha(Util.StringToMD5(usuario.getSenha()));
+            } else if (usuario.getNovaSenha() != null && !usuario.getNovaSenha().equals("")) {
+                usuario.setSenha(Util.StringToMD5(usuario.getNovaSenha()));
+            }
+
+            return usuarioService.saveOrUpdate(usuario);
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+    }
+
+    @DELETE
+    @Transactional
+    @Path(value = "{id}")
+    public Response remover(@PathParam("id") Long id) {
+
+        try {
+            usuarioService.deleteById(id);
+            return Response.ok(new Object() {
+                @SuppressWarnings("unused")
+                public String msg = Constantes.REGISTRO_REMOVIDO_SUCESSSO;
+                @SuppressWarnings("unused")
+                public int status = Response.Status.OK.getStatusCode();
+            }).build();
+
+        } catch (Exception e) {
+            ResponseBuilder rb = Response.status(Response.Status.BAD_REQUEST.getStatusCode());
+            rb = rb.entity(new Object() {
+                @SuppressWarnings("unused")
+                public String msg = Constantes.REGISTRO_POSSUI_DEPENDENCIAS;
+            });
+            return rb.build();
+        }
+    }
+
+    @GET
+    @Transactional
+    @Path(value = "validaemail/{email}/{id}")
+    public Response validaEmail(@PathParam("id") Long id, @PathParam("email") String email) {
+
+        try {
+            Usuario usuario = usuarioService.findByLogin(email);
+
+            if (usuario == null || usuario.getId().equals(id)) {
+                return Response.ok(new Object() {
+                    @SuppressWarnings("unused")
+                    public String valido = "true";
+                    @SuppressWarnings("unused")
+                    public int status = Response.Status.OK.getStatusCode();
+                }).build();
+            } else {
+                return Response.ok(new Object() {
+                    @SuppressWarnings("unused")
+                    public String valido = "false";
+                    @SuppressWarnings("unused")
+                    public int status = Response.Status.OK.getStatusCode();
+                }).build();
+            }
+
+        } catch (Exception e) {
+            Response response = Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            throw new WebApplicationException(response);
+        }
+    }
+
+}

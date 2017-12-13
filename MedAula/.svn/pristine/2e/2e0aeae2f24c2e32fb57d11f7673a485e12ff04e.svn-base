@@ -1,0 +1,116 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Preços</h3>
+                </div>
+
+                <div class="md-card-content padding-reset" id="help_content">
+                    <table datatable="ng" class="uk-table" dt-instance="dtInstance"
+                           dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+                        <thead>
+                            <tr>
+                                <td>Produto</td>
+                                <td>Categoria</td>
+                                <td>Tipo Categoria</td>
+                                <td>Preço Atual</td>
+                                <td>Status</td>
+                                <td>Ações</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in listProdutosParceiro">
+                                <td>{{item.produto.nome}} {{item.produto.embalagem.nome}} - {{getVolumeEmbalagem(item.produto.embalagem.volume)}}</td>
+                                <td>{{item.produto.tipoCategoria.categoria.nome}}</td>
+                                <td>{{item.produto.tipoCategoria.nome}}</td>
+                                <td>
+                                    <div ng-if="item.ativarPromocional">De <s>{{item.preco| currency:"R$"}}</s> para {{item.precoPromocional| currency:"R$"}} </div>
+                                    <div ng-if="!item.ativarPromocional">{{item.preco| currency:"R$"}}</div>
+                                </td>
+                                <td>
+                                    <div class="uk-input-group">
+                                        <input color="#000000" ng-model="item.ativo"
+                                               ng-change="toggleStatusProdutoParceiro(item);" type="checkbox"
+                                               ui-switch id="switch_{{$index}}"/>
+                                    </div>
+                                </td>
+                                <td><a ng-click="editar(item.id, $index)" data-uk-modal="{target:'#modalProdutoPreco'}" title="Editar"> <i
+                                            class="material-icons">&#xE227;</i>
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalProdutoPreco" class="uk-modal">
+    <div class="uk-modal-dialog">
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">Cadastro de Preço</h3>
+        </div>
+
+        <table class="uk-table">
+            <thead>
+                <tr>
+                    <td>Produto</td>
+                    <td>Categoria</td>
+                    <td>Tipo Categoria</td>
+                    <td style="width: 10%">Status</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{produtoParceiro.produto.nome}} {{produtoParceiro.produto.embalagem.nome}} - {{getVolumeEmbalagem(produtoParceiro.produto.embalagem.volume)}}</td>
+                    <td>{{produtoParceiro.produto.tipoCategoria.categoria.nome}}</td>
+                    <td>{{produtoParceiro.produto.tipoCategoria.nome}}</td>
+                    <td>{{labelStatus(produtoParceiro.ativo)}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+        <form id="form_produtoParceiroPreco" class="uk-form-stacked"
+              ng-if="showForm" ng-init="inicializaForm()">
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-2">
+                    <div class="parsley-row">
+                        <label for="preco">Preço</label> <input
+                            class="md-input md-input-success" type="text" id="preco"
+                            name="preco" ui-number-mask ng-model="preco.preco" md-input/>
+                    </div>
+                </div>
+            </div>
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-2">
+                    <div ng-click="preco.ativarPromocional" class="parsley-row">
+                        <label for="precoPromocional">Preço Promocional</label> <input
+                            class="md-input md-input-success" type="text"
+                            id="precoPromocional" ui-number-mask name="precoPromocional"
+                            ng-model="preco.precoPromocional" md-input/>
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2">
+                    <input type="checkbox" ng-true-value="1" ng-false-value="0"
+                           ui-switch ng-model="preco.ativarPromocional" color="#000000" 
+                           id="ativarPromocional" /> <label for="ativarPromocional" class="inline-label">Ativar Promocional</label>
+                </div>
+            </div>
+
+        </form>
+
+        <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="md-btn md-btn-flat uk-modal-close"
+                    ng-click="showForm = false">Cancelar</button>
+            <button ng-click="salvar()" type="button"
+                    class="md-btn md-btn-flat md-btn-flat-primary">Confirmar</button>
+        </div>
+    </div>
+
+</div>

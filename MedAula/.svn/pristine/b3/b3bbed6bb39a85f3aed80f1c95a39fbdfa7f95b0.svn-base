@@ -1,0 +1,28 @@
+package br.com.ibebidas.dao.impl;
+
+import java.util.List;
+
+import br.com.ibebidas.dao.ProdutoParceiroDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.ProdutoParceiro;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+
+public class ProdutoParceiroDAOImpl extends BaseDAOImpl<ProdutoParceiro> implements ProdutoParceiroDAO {
+
+    public List<ProdutoParceiro> findAll(ProdutoParceiro produtoParceiro) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public List<ProdutoParceiro> findAllByIdParceiro(Long id) {
+        Session session = (Session) getEntityManager().getDelegate();
+        Criteria criteria = session.createCriteria(ProdutoParceiro.class);
+        criteria.add(Restrictions.eq("parceiro.id", id));
+        List<ProdutoParceiro> list = criteria.list();
+        
+        return list;
+    }
+
+}

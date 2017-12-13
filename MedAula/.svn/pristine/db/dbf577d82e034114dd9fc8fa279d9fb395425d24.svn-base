@@ -1,0 +1,33 @@
+package br.com.ibebidas.service.impl;
+
+import java.util.List;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.ProdutoParceiro;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+import br.com.ibebidas.dao.ProdutoParceiroDAO;
+import br.com.ibebidas.service.ProdutoParceiroService;
+
+public class ProdutoParceiroServiceImpl extends BaseServiceImpl<ProdutoParceiro> implements ProdutoParceiroService {
+
+    @Inject
+    private ProdutoParceiroDAO dao;
+
+    @Override
+    public BaseDAO<ProdutoParceiro> getDAO() {
+        // TODO Auto-generated method stub
+        return dao;
+    }
+
+    public List<ProdutoParceiro> findAll(ProdutoParceiro produtoParceiro) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public List<ProdutoParceiro> findAllByIdParceiro(Long id) {
+        return dao.findAllByIdParceiro(id);
+    }
+
+}

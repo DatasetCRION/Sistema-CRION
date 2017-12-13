@@ -1,0 +1,139 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">           TWEETS</h3>
+                </div>
+
+                <div class="md-card-content padding-reset" id="help_content">
+                    <table datatable="ng" class="uk-table" dt-instance="dtInstance"
+                           dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+                        <thead>
+                            <tr>
+                                <td>VOTO</td>
+                                <td>USUÁRIO</td>
+                                <td>TWEET</td>
+                                <td>LOCALIZAÇÃO</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--<tr ng-repeat="item in lista" data-uk-modal="{target:'#modalCadastroModeloFranquia'}" ng-click="visualizar($index);" >-->
+                            <tr ng-repeat="item in lista">
+
+                                <!--<td><input type="image" src="" name="voto" value="1"></td>-->
+                                <td>
+                                    <!--<button id="close" class="closing" onClick="votoFavor($index)"><img src="auth/img/visto.png" width="20" height="40"/></button>-->
+                                    <button id="close" class="closing"  ng-click="voto(item,true)" ><img src="auth/img/visto.png" width="20" height="40"/></button>
+                                    <!--<button id="close" class="closing" onClick="votoContra($index)"><img src="auth/img/X.png" width="20" height="40" /></button>-->
+                                    <button id="close" class="closing" ng-click="voto(item,false)" ><img src="auth/img/X.png" width="20" height="40" /></button>
+                                </td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.text}}</td>
+                                <td>{{item.profileLocation}}</td>                             
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cadastro a parte-->
+<div class="md-fab-wrapper">
+    <a class="md-fab md-fab-acaibeat-verde" ng-click="novo()"
+       data-uk-modal="{target:'#modalCadastroModeloFranquia'}"> <i
+            class="material-icons">&#xE145;</i>
+    </a>
+</div>
+ 
+
+<div id="modalCadastroModeloFranquia" class="uk-modal">
+    <div  class="uk-modal-dialog">
+        <table  class="uk-table" >
+            <thead>
+                <tr>
+                    <td>Id Tweet</td>
+                    <td>Name</td>
+                    <td>Id Usuário</td>
+                    <td>Local do profile</td>
+                    <td>Tweet</td>
+                </tr>
+            </thead>
+            <tbody>
+            <tbody>
+                <tr ng-repeat="item in lista" >
+                    <td>{{item.nametwet}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.idusuario}}</td>
+                    <td>{{item.profileLocation}}</td>
+                    <td>{{item.text}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-if="showData" class="uk-modal-dialog">
+
+        <div class="uk-modal-header">
+            <h3 class="uk-modal-title">{{modeloFranquia.id ? 'Editar Franquia'
+				: 'Cadastro de Modelo de Franquia'}}</h3>
+        </div>
+
+
+        <form id="form_modeloFranquia" class="uk-form-stacked" ng-if="showForm"
+              ng-init="inicializaForm()">
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+                    <div class="parsley-row">
+                        <label for="nome">Nome<span class="req">*</span></label> 
+                        <input class="md-input md-input-success" type="text" id="nome" name="nome"
+                               ng-model="modeloFranquia.nome" md-input required
+                               data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-2">
+                    <div class="parsley-row">
+                        <label for="nome">Largura</label> 
+                        <input class="md-input md-input-success" type="text" id="largura" name="largura"
+                               ui-number-mask ng-model="modeloFranquia.largura" md-input />
+                    </div>
+                </div>
+                <div class="uk-width-medium-1-2">
+                    <div class="parsley-row">
+                        <label for="nome">Comprimento</label> 
+                        <input class="md-input md-input-success" type="text" id="comprimento" name="comprimento"
+                               ui-number-mask ng-model="modeloFranquia.comprimento" md-input />
+                    </div>
+                </div>
+
+            </div>
+            <div class="uk-grid" data-uk-grid-margin>
+                <div class="uk-width-medium-1-1">
+                    <div class="parsley-row">
+                        <label for="nome">Detalhamento</label>
+                        <textarea class="md-input md-input-success" type="text" id="detalhamento" name="detalhamento"
+                                  ng-model="modeloFranquia.detalhamento"md-input maxlength="1000"></textarea>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+
+        <div class="uk-modal-footer uk-text-right">
+            <button type="button" class="md-btn md-btn-flat uk-modal-close"
+                    ng-click="showForm = false">Cancelar</button>
+            <button ng-click="salvar()" type="button"
+                    class="md-btn md-btn-flat md-btn-flat-primary">Confirmar</button>
+        </div>
+    </div>
+</div>

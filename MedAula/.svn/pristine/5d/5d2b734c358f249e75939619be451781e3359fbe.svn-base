@@ -1,0 +1,29 @@
+<div class="md-card-content" id="help_content">
+	<form id="form_formaPagamentoParceiro" class="uk-form-stacked"
+		ng-init="inicializaForm()">
+		
+		<div class="uk-grid" data-uk-grid-margin="">
+			<div class="uk-width-medium-1-1">
+				<a class="md-btn md-btn-primary md-btn-block"
+					ng-click="adicionarFormaPagamento()">Adicionar Forma de Pagamento</a>
+			</div>
+		</div>
+
+		<table class="uk-table">
+			<tbody>
+				<tr ng-repeat="formaPagamento in formaPagamentoParceiro.formaPagamento">
+					<td>
+						<div class="parsley-row">
+							<label for="nome" class="uk-form-label">Forma de Pagamento</label>
+								<input type="text" config="formaPagamentoConfig"
+                                	options="listFormaPagamento" ng-model="formaPagamentoParceiro.formaPagamento.id" 
+                                    name="formaPagamento" selectize />
+						</div>
+					</td>
+					<td><a title="Remover" ng-click="removerFormaPagamento($index)"
+						style="line-height: 54px;"> <i class="material-icons">&#xE14C;</i></a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+</div>

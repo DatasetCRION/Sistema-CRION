@@ -1,0 +1,16 @@
+package br.com.ibebidas.dao.impl;
+
+import java.util.List;
+
+import br.com.ibebidas.dao.PrecoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Preco;
+
+public class PrecoDAOImpl extends BaseDAOImpl<Preco> implements PrecoDAO{
+
+	public List<Preco> findAll(Preco preco) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

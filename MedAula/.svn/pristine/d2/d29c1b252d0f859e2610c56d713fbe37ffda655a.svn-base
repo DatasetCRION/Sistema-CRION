@@ -1,0 +1,46 @@
+app.controller('ctrl_produto', function($scope, $rootScope, $compile, $timeout,
+		$interval, genericService, DTOptionsBuilder, DTColumnDefBuilder,
+		dataTableLanguageService, commonsService, produtos) {
+
+	var ng = $scope;
+
+	$rootScope.page_full_height = true;
+	$rootScope.headerDoubleHeightActive = true;
+
+	ng.service = new genericService("produto");
+
+	ng.listProduto = produtos;
+
+	ng.salvar = function() {
+
+		ng.service.salvar(ng.produto, function(response) {
+			UIkit.modal("#modalProduto").hide()
+			ng.showForm = false;
+			ng.getProduto();
+			ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+		}, function() {
+
+		});
+	};
+
+	ng.getProduto = function() {
+		ng.service.getAll(function(response) {
+			ng.listProduto = response;
+		});
+	};
+
+	ng.dtInstance = {};
+
+	ng.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+			'full_numbers').withOption('initComplete', function() {
+		$timeout(function() {
+
+			// md inputs
+			$compile($('.dt-uikit .md-input'))($scope);
+		})
+	}).withLanguage(dataTableLanguageService.portugues());
+
+	ng.dtColumnDefs = [ DTColumnDefBuilder.newColumnDef(5).notSortable() ];
+
+});

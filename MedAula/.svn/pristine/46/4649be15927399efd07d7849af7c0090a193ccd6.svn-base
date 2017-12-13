@@ -1,0 +1,111 @@
+<div id="page_content">
+	<div id="page_content_inner">
+
+		<div class="uk-width-medium-9-10 uk-container-center">
+
+			<div class="md-card md-card-single" single-card>
+				<div class="md-card-toolbar">
+					<h3 class="md-card-toolbar-heading-text large">Modelo de Franquia</h3>
+				</div>
+
+				<div class="md-card-content padding-reset" id="help_content">
+					<table datatable="ng" class="uk-table" dt-instance="dtInstance"
+						dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+						<thead>
+							<tr>
+								<td>Nome</td>
+								<td>Largura</td>
+								<td>Comprimento</td>
+								<td>Detalhamento</td>
+								<td>Ações</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in listModeloFranquias" data-uk-modal="{target:'#modalCadastroModeloFranquia'}" ng-click="editar(item.id)">
+								<td>{{item.nome}}</td>
+								<td>{{item.largura | finance:false:2}}</td>
+								<td>{{item.comprimento | finance:false:2}}</td>
+								<td>{{item.detalhamento}}</td>
+								<td>
+									<a data-uk-modal="{target:'#modalCadastroModeloFranquia'}" title="Editar"><i class="material-icons">&#xE150;</i></a>
+									<a  title="Remover"ng-click="remover(item.id);$event.stopPropagation();"><i class="material-icons">&#xE872;</i></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="md-fab-wrapper">
+	<a class="md-fab md-fab-acaibeat-verde" ng-click="novo()"
+		data-uk-modal="{target:'#modalCadastroModeloFranquia'}"> <i
+		class="material-icons">&#xE145;</i>
+	</a>
+</div>
+<div id="modalCadastroModeloFranquia" class="uk-modal">
+	<div class="uk-modal-dialog">
+
+		<div class="uk-modal-header">
+			<h3 class="uk-modal-title">{{modeloFranquia.id ? 'Editar Franquia'
+				: 'Cadastro de Modelo de Franquia'}}</h3>
+		</div>
+
+
+		<form id="form_modeloFranquia" class="uk-form-stacked" ng-if="showForm"
+			ng-init="inicializaForm()">
+
+			<div class="uk-grid" data-uk-grid-margin>
+				<div class="uk-width-medium-1-1">
+					<div class="parsley-row">
+						<label for="nome">Nome<span class="req">*</span></label> 
+						<input class="md-input md-input-success" type="text" id="nome" name="nome"
+							ng-model="modeloFranquia.nome" md-input required
+							data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+					</div>
+				</div>
+			</div>
+			
+			
+			<div class="uk-grid" data-uk-grid-margin>
+				<div class="uk-width-medium-1-2">
+					<div class="parsley-row">
+						<label for="nome">Largura</label> 
+						<input class="md-input md-input-success" type="text" id="largura" name="largura"
+							 ui-number-mask ng-model="modeloFranquia.largura" md-input />
+					</div>
+				</div>
+			<div class="uk-width-medium-1-2">
+					<div class="parsley-row">
+						<label for="nome">Comprimento</label> 
+						<input class="md-input md-input-success" type="text" id="comprimento" name="comprimento"
+							 ui-number-mask ng-model="modeloFranquia.comprimento" md-input />
+					</div>
+				</div>
+				
+			</div>
+			<div class="uk-grid" data-uk-grid-margin>
+				<div class="uk-width-medium-1-1">
+					<div class="parsley-row">
+						<label for="nome">Detalhamento</label>
+						<textarea class="md-input md-input-success" type="text" id="detalhamento" name="detalhamento"
+							ng-model="modeloFranquia.detalhamento"md-input maxlength="500"></textarea>
+
+					</div>
+				</div>
+			</div>
+
+
+		</form>
+
+		<div class="uk-modal-footer uk-text-right">
+			<button type="button" class="md-btn md-btn-flat uk-modal-close"
+				ng-click="showForm = false">Cancelar</button>
+			<button ng-click="salvar()" type="button"
+				class="md-btn md-btn-flat md-btn-flat-primary">Confirmar</button>
+		</div>
+	</div>
+
+</div>

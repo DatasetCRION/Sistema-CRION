@@ -1,0 +1,89 @@
+app.controller('ctrl_formaPagamentoParceiro', function($scope, $rootScope, $compile, $timeout, $interval, genericService,
+												   DTOptionsBuilder, DTColumnDefBuilder, dataTableLanguageService, commonsService,
+												   parceiro, formasPagamento){
+	
+	var ng = $scope;
+	
+	$rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+    
+    ng.showForm = false;
+    $formValidate  = null;
+    ng.activeTabIndex = 0;
+    
+    ng.service = new genericService("parceiro");
+    
+    ng.parceiro = parceiro;
+    ng.listFormasPagamento = formasPagamento;
+    
+    
+    ng.init = function(){
+    	
+    	for(var i in ng.listFormasPagamento){
+    		for(var j in ng.parceiro.formaPagamentoParceiro){
+    			if(ng.listFormasPagamento[i].id == ng.parceiro.formaPagamentoParceiro[j].formaPagamento.id){
+    				ng.listFormasPagamento[i].checked = ng.parceiro.formaPagamentoParceiro[j].dataDesabilitacao == null;
+    				ng.listFormasPagamento[i].ultimaDesabilitacao = ng.parceiro.formaPagamentoParceiro[j].dataDesabilitacao;
+    				break;
+    			}
+    		}
+    	}
+    };
+    
+    
+	ng.salvar = function() {
+			
+		ng.service.salvar(ng.parceiro, function(response) {
+			 ng.parceiro = response;
+			 ng.init();
+			 ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+		}, function() {
+		});
+	}; 
+	
+	ng.getFormaPagamento= function() {
+		ng.service.getAll(function(response) {
+			ng.listFormasPagamento = response;
+		});
+	};
+	    
+  
+	ng.toggleFormaPagamento = function(forma){
+		
+		formaIndex = -1;
+		
+		for(var i in  ng.parceiro.formaPagamentoParceiro ){
+			if(forma.id ==  ng.parceiro.formaPagamentoParceiro[i].formaPagamento.id){
+				formaIndex = i;
+				break;
+			}
+		}
+		
+		if(forma.checked && formaIndex < 0){
+			ng.parceiro.formaPagamentoParceiro.push(
+					{
+						id:null,
+						dataRegistro:new Date(),
+						formaPagamento:{id:forma.id}
+					}
+			);
+		}else if(!forma.checked && formaIndex > -1 ){
+			ng.parceiro.formaPagamentoParceiro[formaIndex].dataDesabilitacao= new Date();
+		}else if(forma.checked && formaIndex > -1){
+			ng.parceiro.formaPagamentoParceiro[formaIndex].dataDesabilitacao = null;
+		}
+		
+		ng.salvar();
+		
+	};
+    
+	
+	 
+    ng.init();
+    
+   
+
+  
+    
+});
+

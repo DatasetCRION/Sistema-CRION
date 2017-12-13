@@ -1,0 +1,3 @@
+<Context reloadable="true" crossContext="true" backgroundProcessorDelay="-1">
+  <Resource factory="org.apache.tomcat.dbcp.dbcp.BasicDataSourceFactory" auth="Container" initialSize="8" maxWait="1000" type="javax.sql.DataSource" url="jdbc:mysql://127.0.0.1:3306/medaula" logAbandoned="false" password="" maxIdle="5" testOnBorrow="true" testWhileIdle="true" removeAbandoned="true" timeBetweenEvictionRunsMillis="10000" minEvictableIdleTimeMillis="60000" name="jdbc/medaula" driverClassName="com.mysql.jdbc.Driver" minActive="1" removeAbandonedTimeout="300" username="root" maxActive="100"/>
+</Context>

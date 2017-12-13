@@ -1,0 +1,12 @@
+package br.com.ibebidas.service;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.entity.HorarioFuncionamento;
+import br.com.ibebidas.service.base.BaseService;
+import br.com.ibebidas.service.impl.HorarioFuncionamentoServiceImpl;
+
+@ImplementedBy(HorarioFuncionamentoServiceImpl.class)
+public interface HorarioFuncionamentoService extends BaseService<HorarioFuncionamento>{
+
+}

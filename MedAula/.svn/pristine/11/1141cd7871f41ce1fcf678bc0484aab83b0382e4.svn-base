@@ -1,0 +1,78 @@
+package br.com.ibebidas.resource;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+
+import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
+
+import br.com.ibebidas.entity.Cidade;
+import br.com.ibebidas.entity.DiaSemana;
+import br.com.ibebidas.entity.Estado;
+import br.com.ibebidas.entity.FormaPagamento;
+import br.com.ibebidas.entity.vo.UsuarioVO;
+import br.com.ibebidas.enums.TipoPessoa;
+import br.com.ibebidas.service.CidadeService;
+import br.com.ibebidas.service.DiaSemanaService;
+import br.com.ibebidas.service.EstadoService;
+import br.com.ibebidas.service.FormaPagamentoService;
+import br.com.ibebidas.service.ParceiroService;
+
+@Path(value = "/commons")
+@Produces("application/json; charset=UTF-8")
+public class CommonsResource {
+	
+	@Inject private ParceiroService usuarioService;
+	@Inject private EstadoService estadoService;
+	@Inject private CidadeService cidadeService;
+	@Inject private DiaSemanaService diaSemanaService;
+	@Inject private FormaPagamentoService formaPagamentoService;
+	
+	@Path("usuario")
+	@GET
+	public UsuarioVO getUsuarioLogado() {
+		return usuarioService.getUsuarioLogado();
+	}
+	
+	@Path("estados")
+	@GET
+	@Transactional
+	public List<Estado> getEstados() {
+		return estadoService.getEstadosBrasil();
+	}
+	
+	@Path("cidades/{uf}")
+	@GET
+	@Transactional
+	public List<Cidade> getCidades(@PathParam("uf") String uf) {
+		return cidadeService.getCidadeByidEstado(uf);
+	}
+	
+	@Path("diaSemana")
+	@GET
+	@Transactional
+	public List<DiaSemana> getDiaSemana() {
+		return diaSemanaService.findAll();
+	}
+	
+
+    @GET
+    @Path(value="tiposPessoa")
+    public List<TipoPessoa> getTiposPessoa(){
+	  return new ArrayList<TipoPessoa>(Arrays.asList(TipoPessoa.values()));
+    }
+    
+    @Path("formaPagamento")
+	@GET
+	@Transactional
+	public List<FormaPagamento> getFormaPagamento() {
+		return formaPagamentoService.findAll();
+	}
+    
+}

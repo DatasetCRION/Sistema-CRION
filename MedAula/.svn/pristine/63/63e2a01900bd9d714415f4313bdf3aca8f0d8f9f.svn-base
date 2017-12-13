@@ -1,0 +1,37 @@
+package br.com.ibebidas.enums;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonValue;
+
+
+public enum TipoPessoa {
+
+	J,F;
+	
+	
+	private static Map<String, TipoPessoa> namesMap = new HashMap<String, TipoPessoa>(3);
+
+    static {
+        namesMap.put("Jurídica", J);
+        namesMap.put("Física", F);
+    }
+    
+    @JsonCreator
+    public static TipoPessoa forValue(String value) {
+        return namesMap.get(value);
+    }
+	
+    @JsonValue
+    public String toValue() {
+        for (Entry<String, TipoPessoa> entry : namesMap.entrySet()) {
+            if (entry.getValue() == this)
+                return entry.getKey();
+        }
+        return null; // or fail
+    }
+	
+}

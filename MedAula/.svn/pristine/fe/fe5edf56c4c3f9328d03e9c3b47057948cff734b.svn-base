@@ -1,0 +1,22 @@
+package br.com.ibebidas.dao.impl;
+
+import java.util.List;
+
+import br.com.ibebidas.dao.CidadeDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Cidade;
+
+public class CidadeDAOImpl extends BaseDAOImpl<Cidade> implements CidadeDAO {
+
+    @SuppressWarnings("unchecked")
+    public List<Cidade> getCidadesByEstado(String uf) {
+        StringBuilder sb = new StringBuilder()
+                .append("select * ")
+                .append(" from tb_cidade c ")
+                .append(" join tb_estado e on c.estado = e.id and  ")
+                .append(" e.uf = ? ")
+                .append("order by c.nome ");
+        return getEntityManager().createNativeQuery(sb.toString(), Cidade.class).setParameter(1, uf).getResultList();
+    }
+
+}

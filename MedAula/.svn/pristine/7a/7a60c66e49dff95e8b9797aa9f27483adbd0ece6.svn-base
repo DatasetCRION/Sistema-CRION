@@ -1,0 +1,44 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Formas de Pagamento</h3>
+                    <div class="md-card-toolbar-actions">
+                        <i class="md-icon material-icons" data-uk-tooltip title="Salvar"
+                           id="toggleAll" ng-click="salvar()"
+                           data-uk-modal="{target:'#modalFormaPagamentoParceiro'}">&#xE161;</i>
+                    </div>
+                </div>
+                <div class="md-card md-card-single" single-card>
+
+                    <div class="md-card-content" id="help_content">
+                        <table class="uk-table">
+                           <thead>
+                           <tr >
+	                           	<td style="width: 90%;"></td>
+	                           	<td>Status</td>
+                           	</tr>
+                           </thead>
+                            <tbody>
+                                <tr ng-repeat="forma in listFormasPagamento">
+                                    <td >{{forma.nome}}</td>
+                                    <td>
+                                        <div class="uk-input-group">
+                                            <input type="checkbox" ui-switch ng-model="switches.switch_a"
+                                                   id="switch_demo_1" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+��

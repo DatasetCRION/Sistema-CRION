@@ -1,0 +1,57 @@
+CREATE database medaula
+
+use medaula
+
+CREATE TABLE IF NOT EXISTS `medaula`.`tb_usuario` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `nome` VARCHAR(96) NOT NULL,
+ `email` VARCHAR(112) NOT NULL,
+ `senha` VARCHAR(32) NOT NULL,
+ PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+INSERT INTO `medaula`.`tb_usuario` (`nome`, `email`, `senha`) 
+VALUES ('Vinicius', 'vsawgado@gmail.com', '202cb962ac59075b964b07152d234b70');
+
+CREATE TABLE IF NOT EXISTS `medaula`.`Title` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `Name` VARCHAR(32) NOT NULL,
+ `duration` VARCHAR(32) NOT NULL,
+ `language` VARCHAR(32) NOT NULL,
+ `director` VARCHAR(32) NOT NULL,
+ `actors` VARCHAR(32) NOT NULL,
+ `minage` VARCHAR(32) NOT NULL,
+ `days` VARCHAR(32) NOT NULL,
+ `hours` VARCHAR(32) NOT NULL,
+ `lastday` VARCHAR(32) NOT NULL,
+  `local` INT NOT NULL,  
+ PRIMARY KEY (`id`)
+ FOREIGN KEY (`id`) REFERENCES Theatre(`id`)
+)
+ENGINE = InnoDB;
+
+INSERT INTO `medaula`.`Title` (`Name`,`duration`, `language`, `director`,`actors`, `minage`, `days`,`hours`, `lastday`, `local`,) 
+VALUES ('Silici 33','1h20', 'EN', 'Estives Aqui', 'Rodrigo Marques e Kid Bengala', '18','Lundi - Macredi - Vedrendi', '12h - 16h', '30 Mars', '1');
+
+INSERT INTO `medaula`.`Title` (`Name`,`duration`, `language`, `director`,`actors`, `minage`, `days`,`hours`, `lastday`, `local`,)  
+VALUES ('Mr. Nobody','1h25', 'FR', 'David Pincher', 'Gabriel Santos', '18','Mardi - Jeudi - Samedi', '15h - 18h', '15 Mars', '1');
+
+INSERT INTO `medaula`.`Title` (`Name`,`duration`, `language`, `director`,`actors`, `minage`, `days`,`hours`, `lastday`,`local`,)  
+VALUES ('Surdon','1h55', 'EN', 'Director Brazil', 'Carolina Santos', '14','Jeudi - Samedi - Dimanche', '12h - 16h', '30 Mars', '2');
+
+CREATE TABLE IF NOT EXISTS `medaula`.`Theatre` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `city` VARCHAR(32) NOT NULL,
+ `adress` VARCHAR(32) NOT NULL,
+ PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+INSERT INTO `medaula`.`Theatre` (`city`, `adress`) 
+VALUES ('Belo Horizonte', 'Pampulha, 1020');
+
+INSERT INTO `medaula`.`Theatre` (`city`, `adress`) 
+VALUES ('Paris', '9E Boulevard Jourdan');
+
+select * from tb_usuario
+select * from Title
+select * from Theatre

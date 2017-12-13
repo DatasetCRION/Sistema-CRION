@@ -1,0 +1,73 @@
+app.controller('ctrl_menu', function ($scope, $rootScope, $timeout) {
+
+    $scope.$on('onLastRepeat', function (scope, element, attrs) {
+        $timeout(function () {
+            if (!$rootScope.miniSidebarActive) {
+                // activate current section
+                $('#sidebar_main').find('.current_section > a').trigger('click');
+            } else {
+                // add tooltips to mini sidebar
+                var tooltip_elem = $('#sidebar_main').find('.menu_tooltip');
+                tooltip_elem.each(function () {
+                    var $this = $(this);
+
+                    $this.attr('title', $this.find('.menu_title').text());
+                    UIkit.tooltip($this, {});
+                });
+            }
+        })
+    });
+
+
+    $scope.sections = [
+        {
+            id: 0,
+            titulo: 'Cadastro',
+            icone: '&#xE02F;',
+            submenu: [
+                {
+                    titulo: 'Meus dados',
+                    link: 'restricted.cadastro.meusdados'
+                },
+                {
+                    titulo: 'Horário de Funcionamento',
+                    link: 'restricted.cadastro.horariofuncionamento'
+                },
+                {
+                    titulo: 'Formas de Pagamento',
+                    link: 'restricted.cadastro.formaspagamento'
+                }
+            ]
+        },
+        {
+            id: 1,
+            titulo: 'Meus Produtos',
+            icone: '&#xE544;',
+            submenu: [
+                {
+                    title: 'Preços',
+                    link: 'produtos.precos'
+                },
+                {
+                    title: 'Solicitar cadastro de produto',
+                    link: 'produtos.solicitacao'
+                }
+            ]
+        },
+        {
+            id: 2,
+            titulo: 'Pedidos',
+            icone: '&#xE547;',
+            submenu: [
+                {
+                    titulo: 'Meus Pedidos',
+                    link: 'restricted.pedidos.meuspedidos'
+                },
+                {
+                    titulo: 'Consulta de pedido único',
+                    link: 'restricted.pedidos.consulta'
+                }
+            ]
+        }
+    ]
+});

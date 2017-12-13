@@ -1,0 +1,153 @@
+app.controller('ctrl_init', function($scope,$rootScope,$location,$http,$timeout, commonsService, $compile, $timeout){
+	
+	var ng = $scope;
+	ng.usuarioLogado = {};
+	ng.moduloAtivo = {};
+	
+	ng.MSG_PREENCHIMENTO_OBRIGATORIO = MSG_PREENCHIMENTO_OBRIGATORIO;
+	
+	ng.listMeses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+	
+	
+	$rootScope.VEW_PATH= "app/view/";
+	
+	ng.init = function(){
+		commonsService.getUsuarioLoado(function(retorno){
+			ng.usuarioLogado = retorno;
+		});
+	};
+	
+	 ng.setModuloAtivo = function(modulo){
+		 ng.moduloAtivo = modulo;
+	 };
+	
+	ng.logout = function(){
+		location.href = "auth/logout";
+	};
+	
+	ng.sucesso = function(titulo, texto){
+		ng.criaNotificacao(titulo, texto, "success");
+	};
+	
+	ng.erro = function(titulo, texto){
+		ng.criaNotificacao(titulo, texto, "error");
+	};
+	
+	ng.alerta = function(titulo, texto){
+		ng.criaNotificacao(titulo, texto);
+	};
+	
+	ng.confirmacao = function(msg,funcaoConfirmacao, funcaoCancelamento ){
+		UIkit.modal.confirm(msg, funcaoConfirmacao, {labels:{Cancel:'Não', Ok:"Sim"}}, funcaoCancelamento);
+	};
+	
+	ng.criaNotificacao = function(titulo, texto, tipo){
+		
+		var stack_bottomleft = {"dir1": "left", "dir2": "up", "push": "top"};
+		
+		new PNotify({
+            title: titulo,
+            text: texto,
+            type: tipo != undefined ? tipo : "notice",
+           addclass: "stack-bottomright",
+            stack:stack_bottomleft
+        });
+	};
+	
+	
+	
+	ng.executeFunction = function(funcao){
+		ng.$eval(funcao);
+	};
+	
+	ng.formataHoraSQL = function(horaString){
+		 return moment(horaString, 'HH:mm').format('HH:mm:ss');
+	};
+	
+	 
+	 ng.formatData = function(date, format){
+		 if(date instanceof Date){
+			 
+			 var dia = date.getDate();
+			 if(dia < 10)
+				 dia="0"+dia;
+			 
+			 var mes = date.getMonth()+1;
+			 if(mes < 10)
+				 mes="0"+mes;
+			 
+			 var ano = date.getFullYear();
+			 
+			 if(format){
+				 return format.replace("DD",dia).replace("MM",mes).replace("YYYY",ano);
+			 }else{
+				 return dia+""+mes+""+ano;
+			 }
+			 
+		 }
+		 else{
+			 return "";
+		 }
+	 };
+		
+	ng.replaceAll = function(str, needle, replacement) {
+	    var i = 0;
+	    if(str != undefined){
+	    	 str = str.toString();
+			    while ((i = str.indexOf(needle, i)) != -1) {
+			        str = str.replace(needle, replacement);
+			    }
+			    return str;
+	    }
+	    else{
+	    	return null;
+	    }
+	   
+	};
+	
+	
+	ng.randomColorGenerator = function () { 
+	    return '#' + (Math.random().toString(16) + '0000000').slice(2, 8); 
+	};
+	
+	ng.capitalizeFirstLetter = function(string) {
+	    return string.charAt(0).toUpperCase() + string.slice(1);
+	};
+		
+	ng.removerAcentos = function( newStringComAcento ) {
+		  var string = newStringComAcento;
+			var mapaAcentosHex 	= {
+				a : /[\xE0-\xE6]/g,
+				e : /[\xE8-\xEB]/g,
+				i : /[\xEC-\xEF]/g,
+				o : /[\xF2-\xF6]/g,
+				u : /[\xF9-\xFC]/g,
+				c : /\xE7/g,
+				n : /\xF1/g
+			};
+
+			for ( var letra in mapaAcentosHex ) {
+				var expressaoRegular = mapaAcentosHex[letra];
+				string = string.replace( expressaoRegular, letra );
+			}
+
+			return string;
+		};
+			
+	ng.copyObject = function (obj) {
+	    var newObj = {};
+	    for (var key in obj) {
+	        newObj[key] = obj[key];
+	    }
+
+	    return newObj;
+	};
+	
+	$rootScope.$watch('moduloAtivo', function(newValue) {
+		if(newValue);
+			ng.moduloAtivo = newValue;
+	});
+	
+	ng.init();
+});
+

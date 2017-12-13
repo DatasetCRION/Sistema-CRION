@@ -1,0 +1,12 @@
+app.service('parceiroService', function($http){
+
+	var url = "rest/parceiro/";
+	
+	this.meusDados = function(callback){
+		$http.get(url+"meusdados").success(function(parceiro){
+			if(callback)
+				callback(parceiro);
+		});
+	};
+
+});

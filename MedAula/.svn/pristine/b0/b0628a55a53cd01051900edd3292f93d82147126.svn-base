@@ -1,0 +1,15 @@
+package br.com.ibebidas.config;
+
+public class Constantes {
+	
+	
+	/**
+	 * Mensagens
+	 */
+	
+	public static 	String REGISTRO_REMOVIDO_SUCESSSO="Registro removido com sucesso";
+	public static 	String REGISTRO_POSSUI_DEPENDENCIAS="Este item não pode ser removido, pois o mesmo possui dependências.";
+	
+	
+	
+}

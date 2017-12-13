@@ -1,0 +1,24 @@
+app.service('pedidoService', function($http){
+
+	var url = "rest/pedido/";
+	
+	this.cancelado = function(callback){
+		$http.get(url+"cancelado").success(function(pedido){
+			if(callback)
+				callback(pedido);
+		});
+	};
+	this.entregue = function(callback){
+		$http.get(url+"entregue").success(function(pedido){
+			if(callback)
+				callback(pedido);
+		});
+	};
+	this.andamento = function(callback){
+		$http.get(url+"andamento").success(function(pedido){
+			if(callback)
+				callback(pedido);
+		});
+	};
+
+});

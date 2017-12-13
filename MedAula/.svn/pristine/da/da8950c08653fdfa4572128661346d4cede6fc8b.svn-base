@@ -1,0 +1,24 @@
+package br.com.ibebidas.dao.impl;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+
+import br.com.ibebidas.dao.ParceiroDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Parceiro;
+
+public class ParceiroDAOImpl extends BaseDAOImpl<Parceiro> implements ParceiroDAO {
+
+	public Parceiro findByLogin(String login) {
+		if (login != null) {
+			Session session = (Session) getEntityManager().getDelegate();
+			Criteria criteria = session.createCriteria(Parceiro.class);
+			criteria.add(Restrictions.eq("emailResponsavel", login));
+			Parceiro pessoa = (Parceiro) criteria.uniqueResult();
+			return pessoa;
+		} else {
+			return null;
+		}
+	}
+}

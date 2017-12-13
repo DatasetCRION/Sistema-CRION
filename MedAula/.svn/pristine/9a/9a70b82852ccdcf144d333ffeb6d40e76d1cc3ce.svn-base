@@ -1,0 +1,28 @@
+package br.com.ibebidas.service.impl;
+
+import java.util.List;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.CidadeDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.Cidade;
+import br.com.ibebidas.service.CidadeService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class CidadeServiceImpl extends BaseServiceImpl<Cidade> implements CidadeService {
+
+    @Inject
+    private CidadeDAO dao;
+
+    @Override
+    public BaseDAO<Cidade> getDAO() {
+        // TODO Auto-generated method stub
+        return dao;
+    }
+    
+    public List<Cidade> getCidadeByidEstado(String uf) {
+       return dao.getCidadesByEstado(uf);
+    }
+
+}

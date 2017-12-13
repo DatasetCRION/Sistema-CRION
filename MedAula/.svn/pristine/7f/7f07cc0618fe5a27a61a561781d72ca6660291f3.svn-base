@@ -1,0 +1,38 @@
+package br.com.ibebidas.dao.impl;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import br.com.ibebidas.dao.PedidoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Parceiro;
+import br.com.ibebidas.entity.Pedido;
+import br.com.ibebidas.util.AliasToBeanNestedResultTransformer;
+import java.util.List;
+import org.hibernate.Hibernate;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+
+public class PedidoDAOImpl extends BaseDAOImpl<Pedido> implements PedidoDAO {
+
+    public List<Pedido> findAllByParceiro(Long idParceiro) {
+
+        Session session = (Session) getEntityManager().getDelegate();
+        Criteria criteria = session.createCriteria(Pedido.class);
+        criteria.add(Restrictions.eq("parceiro.id", idParceiro));
+        criteria.addOrder(Order.desc("dataPedido"));
+         List<Pedido>  list =  criteria.list();
+         
+         for(Pedido p : list){
+             Hibernate.initialize(p.getProdutoPedido());
+         }
+         
+         return list;
+    }
+
+
+}

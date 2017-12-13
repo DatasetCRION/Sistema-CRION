@@ -1,0 +1,128 @@
+app.controller('ctrl_formaPagamentoParceiro', function($scope, $rootScope, $compile, $timeout, $interval, genericService,
+												   DTOptionsBuilder, DTColumnDefBuilder, dataTableLanguageService, commonsService,
+												   formasPagamentoParceiro, formasPagamento){
+	
+	var ng = $scope;
+	
+	$rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+    
+    ng.showForm = false;
+    $formValidate  = null;
+    ng.activeTabIndex = 0;
+    
+    ng.service = new genericService("formaPagamentoParceiro");
+    ng.serviceFormaPagamento = new genericService("formaPagamento");
+    
+    ng.listFormasPagamentoParceiro = formasPagamentoParceiro;
+    ng.listFormasPagamento = formasPagamento;
+    
+	ng.salvar = function() {
+			
+		if ($formValidate.parsley().validate()) {
+
+				ng.service.salvar(ng.FormaPagamentoParceiro, function(response) {
+					UIkit.modal("#modalFormaPagamentoParceiro").hide()
+					ng.showForm = false;
+					ng.getFormaPagamentoParceiro();
+					ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+				}, function() {
+
+				});
+
+			}
+
+		else {
+			ng.alerta(LABEL_ATENCAO, MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS)
+		}
+
+	}; 
+	
+	ng.getFormaPagamento= function() {
+		ng.service.getAll(function(response) {
+			ng.listFormasPagamento = response;
+		});
+	};
+	    
+    ng.remover = function(id){
+    	ng.confirmacao(MSG_CONFIRMACAO_EXCLUSAO, 
+				function(){
+    				ng.service.remover(id, function(response){
+    					ng.sucesso(LABEL_SUCESSO, response.msg);
+    					ng.getFormaPagamentoParceiro();
+    				}, function(response){
+    					ng.erro(LABEL_ERRO, response.msg)
+    				});
+	   	 		}
+		);
+    };
+    
+    ng.removerFormaPagamento = function(index){
+    	ng.formaPagamentoParceiro.formaPagamento = $.grep(ng.formaPagamentoParceiro.formaPagamento, function( n, i ) {
+    		  return i != index;
+    	});
+    };
+    
+    ng.getFormaPagamentoParceiro = function(){
+    	ng.service.getAll(function(response){
+    	    ng.listFormasPagamento = response;
+    	});
+    };
+    
+    ng.inicializaForm = function(){
+    
+    	
+    	$formValidate = $('#form_formaPagamentoParceiro');
+        
+        $formValidate
+        .parsley()
+        .on('form:validated',function() {
+            if(!$scope.$$phase) {
+                $scope.$apply();
+            }
+        })
+        .on('field:validated',function(parsleyField) {
+            if($(parsleyField.$element).hasClass('md-input')) {
+                
+                if(!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            }
+      });
+    	
+    };
+    
+    ng.editar = function(id) {
+		ng.showForm = true;
+		ng.service.get(id, function(response) {
+			ng.formaPagamento = response;
+		});
+	};
+    
+    ng.dtInstance = {};
+    
+    ng.dtOptions = DTOptionsBuilder
+	 .newOptions()
+	 .withPaginationType('full_numbers')
+	 .withOption('initComplete', function() {
+		 $timeout(function() {
+
+	            // md inputs
+	            $compile($('.dt-uikit .md-input'))($scope);
+	        })
+	 }).withLanguage(
+			 dataTableLanguageService.portugues()
+	);
+    
+   
+    
+    ng.dtColumnDefs = [
+                       DTColumnDefBuilder.newColumnDef(5).notSortable()
+      	];
+    
+
+  
+    
+});
+

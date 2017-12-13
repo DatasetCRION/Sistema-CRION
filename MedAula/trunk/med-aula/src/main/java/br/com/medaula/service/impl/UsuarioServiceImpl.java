@@ -1,0 +1,89 @@
+package br.com.medaula.service.impl;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.google.inject.Inject;
+import com.google.inject.persist.Transactional;
+
+import br.com.medaula.dao.LoginDAO;
+import br.com.medaula.dao.UsuarioDAO;
+import br.com.medaula.dao.base.BaseDAO;
+import br.com.medaula.dao.impl.LoginDAOImpl;
+import br.com.medaula.entity.Usuario;
+import br.com.medaula.entity.vo.UsuarioVO;
+import br.com.medaula.model.UsuarioCorrente;
+import br.com.medaula.service.UsuarioService;
+import br.com.medaula.service.base.BaseServiceImpl;
+
+
+public class UsuarioServiceImpl extends BaseServiceImpl<Usuario> implements
+		UsuarioService, UserDetailsService {
+
+	@Inject
+	private UsuarioDAO pessoaDao;
+	@Inject
+	private LoginDAO loginDAO;
+
+	@Override
+	public BaseDAO<Usuario> getDAO() {
+		return pessoaDao;
+	}
+	
+	@Transactional
+	public UserDetails loadUserByUsername(String login)
+			throws UsernameNotFoundException {
+
+		if (loginDAO == null) {
+			loginDAO = new LoginDAOImpl();
+		}
+
+		Usuario usuario = loginDAO.findByLogin(login);
+		UsuarioCorrente usuarioCorrente = new UsuarioCorrente(usuario);
+		Authentication authentication= new UsernamePasswordAuthenticationToken(usuarioCorrente, usuarioCorrente.getAuthorities()) ; 
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		 SecurityContextHolder.getContext() 
+			.getAuthentication().getPrincipal(); 
+		return usuarioCorrente;
+	}
+
+	public UsuarioVO getUsuarioLogado() {
+		
+		HttpServletRequest request = gethttpServletContext();
+		
+		HttpSession session = request.getSession(true);
+		SecurityContext ctx= (SecurityContext) session.getAttribute("SPRING_SECURITY_CONTEXT");
+		Authentication authentication = ctx.getAuthentication();
+		
+		UsuarioCorrente usuarioCorrente = (UsuarioCorrente) authentication.getPrincipal();
+		
+		return new UsuarioVO(
+				usuarioCorrente.getUsuario().getId(), 
+				usuarioCorrente.getUsuario().getNome(), 
+				usuarioCorrente.getUsuario().getEmail());
+	}
+	
+	
+	private HttpServletRequest gethttpServletContext(){
+		//HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		return request;
+	}
+	
+	@Override
+	public Usuario findByLogin(String login) {
+		return pessoaDao.findByLogin(login);
+	}
+	
+}

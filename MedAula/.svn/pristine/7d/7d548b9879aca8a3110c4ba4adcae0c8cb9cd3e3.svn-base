@@ -1,0 +1,17 @@
+package br.com.ibebidas.dao;
+
+import java.util.List;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.CidadeDAOImpl;
+import br.com.ibebidas.entity.Cidade;
+
+@ImplementedBy(CidadeDAOImpl.class)
+public interface CidadeDAO extends BaseDAO<Cidade> {
+
+    public List<Cidade> getCidadesByEstado(String uf);
+
+
+}

@@ -1,0 +1,14 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.UsuarioDAOImpl;
+import br.com.ibebidas.entity.Usuario;
+
+@ImplementedBy(UsuarioDAOImpl.class)
+public interface UsuarioDAO extends BaseDAO<Usuario> {
+	
+	public Usuario findByLogin(String login);
+	
+}

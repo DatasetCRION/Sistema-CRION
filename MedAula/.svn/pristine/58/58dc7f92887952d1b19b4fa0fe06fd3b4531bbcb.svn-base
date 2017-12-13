@@ -1,0 +1,27 @@
+package br.com.ibebidas.model;
+
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
+
+import br.com.ibebidas.entity.Parceiro;
+
+public class UsuarioCorrente extends User {
+
+	private static final long serialVersionUID = -2854909573492022906L;
+	private Parceiro pessoa;
+	
+   public UsuarioCorrente(Parceiro usuario) {
+	   
+        super(usuario.getEmailResponsavel(), usuario.getSenha(), AuthorityUtils.createAuthorityList("PAR"));
+        this.pessoa = usuario;
+    }
+
+	public Parceiro getUsuario() {
+		return pessoa;
+	}
+
+	public void setUsuario(Parceiro pessoa) {
+		this.pessoa = pessoa;
+	}
+	
+}

@@ -1,0 +1,58 @@
+app.controller('ctrl_produto', function($scope, $rootScope, $compile, $timeout,
+		$interval, genericService, DTOptionsBuilder, DTColumnDefBuilder,
+		dataTableLanguageService, commonsService, produtos,parceiroService) {
+
+	var ng = $scope;
+
+	$rootScope.page_full_height = true;
+	$rootScope.headerDoubleHeightActive = true;
+
+	ng.service = new genericService("produto");
+	ng.serviceParceiro = parceiroService;
+
+	ng.listProduto = produtos;
+	ng.produtoSelecionado = [];
+	/* ng.listProdutoParceiro = produtosParceiro; */
+
+	ng.salvar = function() {
+		ng.serviceParceiro.saveProdutoParceiro(ng.produtoSelecionado, function(response) {
+			ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+		}, function() {
+
+		});
+		
+	};
+
+	ng.adicionar = function() {
+		for ( var i in ng.listProduto) {
+			if (ng.listProduto[i].checked){
+				console.log(ng.listProduto[i]);
+			ng.produtoSelecionado.push(ng.listProduto[i]);
+			ng.listProduto[i] = null;}
+		}
+		console.log(ng.produtoSelecionado);
+		ng.listProduto = ng.listProduto.filter(Boolean);
+		console.log(ng.listProduto);
+	}
+
+	ng.getProduto = function() {
+		ng.service.getAll(function(response) {
+			ng.listProduto = response;
+		});
+	};
+
+	ng.dtInstance = {};
+
+	ng.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+			'full_numbers').withOption('initComplete', function() {
+		$timeout(function() {
+
+			// md inputs
+			$compile($('.dt-uikit .md-input'))($scope);
+		})
+	}).withLanguage(dataTableLanguageService.portugues());
+
+	ng.dtColumnDefs = [ DTColumnDefBuilder.newColumnDef(2).notSortable() ];
+
+});

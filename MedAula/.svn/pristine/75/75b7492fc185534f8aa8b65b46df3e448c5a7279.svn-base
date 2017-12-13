@@ -1,0 +1,151 @@
+package br.com.ibebidas.entity;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import br.com.ibebidas.entity.base.BaseEntityImpl;
+import javax.persistence.Transient;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
+
+@Entity
+@Table(name = "tb_produto_parceiro")
+public class ProdutoParceiro extends BaseEntityImpl<ProdutoParceiro> {
+
+    private static final long serialVersionUID = -90563202302656760L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "id_produto")
+    private Produto produto;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "id_parceiro")
+    private Parceiro parceiro;
+
+    @Column(name = "ativo")
+    private int ativo;
+
+    @Column( name = "preco")
+    private Float preco;
+
+    @Column( name = "preco_promocional")
+    private Float precoPromocional;
+
+    @Column( name = "ativar_promocional")
+    private Integer ativarPromocional;
+
+    /**
+     * @return the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the produto
+     */
+    public Produto getProduto() {
+        return produto;
+    }
+
+    /**
+     * @param produto the produto to set
+     */
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    /**
+     * @return the parceiro
+     */
+    public Parceiro getParceiro() {
+        return parceiro;
+    }
+
+    /**
+     * @param parceiro the parceiro to set
+     */
+    public void setParceiro(Parceiro parceiro) {
+        this.parceiro = parceiro;
+    }
+
+    /**
+     * @return the ativo
+     */
+    public int getAtivo() {
+        return ativo;
+    }
+
+    /**
+     * @param ativo the ativo to set
+     */
+    public void setAtivo(int ativo) {
+        this.ativo = ativo;
+    }
+
+    /**
+     * @return the preco
+     */
+    public Float getPreco() {
+        return preco;
+    }
+
+    /**
+     * @param preco the preco to set
+     */
+    public void setPreco(Float preco) {
+        this.preco = preco;
+    }
+
+    /**
+     * @return the precoPromocional
+     */
+    public Float getPrecoPromocional() {
+        return precoPromocional;
+    }
+
+    /**
+     * @param precoPromocional the precoPromocional to set
+     */
+    public void setPrecoPromocional(Float precoPromocional) {
+        this.precoPromocional = precoPromocional;
+    }
+
+    /**
+     * @return the ativarPromocional
+     */
+    public Integer getAtivarPromocional() {
+        return ativarPromocional;
+    }
+
+    /**
+     * @param ativarPromocional the ativarPromocional to set
+     */
+    public void setAtivarPromocional(Integer ativarPromocional) {
+        this.ativarPromocional = ativarPromocional;
+    }
+
+
+
+}

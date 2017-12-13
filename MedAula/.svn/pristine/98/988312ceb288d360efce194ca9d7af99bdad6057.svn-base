@@ -1,0 +1,19 @@
+<div id="page_content">
+	<div id="page_content_inner">
+
+		<div class="uk-width-medium-9-10 uk-container-center">
+
+			<div class="md-card md-card-single" single-card>
+				<div class="md-card-toolbar">
+					<h3 class="md-card-toolbar-heading-text large">Parceiro</h3>
+					<div class="md-card-toolbar-actions">
+						<i class="md-icon material-icons" data-uk-tooltip title="Salvar"
+							id="toggleAll" ng-click="salvar()"
+							data-uk-modal="{target:'#modalCadastroMeusDados'}">&#xE161;</i>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

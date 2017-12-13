@@ -1,0 +1,42 @@
+<div id="page_content">
+    <div id="page_content_inner">
+
+        <div class="uk-width-medium-9-10 uk-container-center">
+
+            <div class="md-card md-card-single" single-card>
+                <div class="md-card-toolbar">
+                    <h3 class="md-card-toolbar-heading-text large">Formas de Pagamento</h3>
+                </div>
+                <div class="md-card md-card-single" single-card>
+						
+						<div class="md-card-content" id="help_content">
+                        <table class="uk-table">
+                           <thead>
+                           <tr >
+	                           	<td style="width:70%;"></td>
+	                           	<td style="width:20%;">Data desabilitação</td>
+	                           	<td>Status</td>
+                           	</tr>
+                           </thead>
+                            <tbody>
+                                <tr ng-repeat="forma in listFormasPagamento">
+                                    <td >{{forma.nome}}</td>
+                                    <td >{{forma.ultimaDesabilitacao | date: 'dd/MM/yyyy hh:mm'}}</td>
+                                    <td>
+                                        <div class="uk-input-group">
+                                            <input color="#000000" ng-change="toggleFormaPagamento(forma)" ng-model="forma.checked" type="checkbox" ui-switch
+                                                   id="switch_{{$index}}" />
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

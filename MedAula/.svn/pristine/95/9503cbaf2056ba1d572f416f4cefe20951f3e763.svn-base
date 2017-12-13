@@ -1,0 +1,15 @@
+package br.com.ibebidas.dao;
+
+import java.util.List;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.ProdutoParceiroDAOImpl;
+import br.com.ibebidas.entity.ProdutoParceiro;
+
+@ImplementedBy(ProdutoParceiroDAOImpl.class)
+public interface ProdutoParceiroDAO extends BaseDAO<ProdutoParceiro> {
+
+    public List<ProdutoParceiro> findAll(ProdutoParceiro produtoParceiro);
+}

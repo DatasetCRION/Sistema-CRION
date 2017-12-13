@@ -1,0 +1,12 @@
+package br.com.ibebidas.service;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.entity.Endereco;
+import br.com.ibebidas.service.base.BaseService;
+import br.com.ibebidas.service.impl.EnderecoServiceImpl;
+
+@ImplementedBy(EnderecoServiceImpl.class)
+public interface EnderecoService extends BaseService<Endereco>{
+
+}

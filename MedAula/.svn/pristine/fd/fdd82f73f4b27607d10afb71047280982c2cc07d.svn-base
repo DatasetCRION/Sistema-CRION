@@ -1,0 +1,16 @@
+var url = "app/view/cadastro/";
+app.directive('meusdados', function () {
+    return {
+        templateUrl: url+'meusDados.html'
+    };
+});
+app.directive('horario', function () {
+    return {
+        templateUrl: url+'horarioFuncionamento.html'
+    };
+});
+app.directive('pagamento', function () {
+    return {
+        templateUrl: url+'formasPagamento.html'
+    };
+});

@@ -1,0 +1,109 @@
+<div id="page_content">
+	<div id="page_content_inner">
+
+		<div class="uk-width-medium-9-10 uk-container-center">
+
+			<div class="md-card md-card-single" single-card>
+				<div class="md-card-toolbar">
+					<h3 class="md-card-toolbar-heading-text large">Horário de Funcionamento</h3>
+				</div>
+				<div class="md-card md-card-single" single-card>
+
+					<div class="md-card-content padding-reset" id="help_content">
+						<table  datatable="ng" class="uk-table" dt-instance="dtInstance"
+						dt-column-defs="dtColumnDefs" dt-options="dtOptions">
+							<thead>
+								<th style="width: 30%">Dia da Semana</th>
+								<th style="width: 30%">Horário de Abertura</th>
+								<th style="width: 30%">Horário de Fechamento</th>
+								<th style="width: 10%">Ações</th>
+							</thead>
+							<tbody>
+								<tr ng-repeat="item in listHorarioFuncionamento" data-uk-modal="{target:'#modalCadastroHorarioFuncionamento'}" ng-click="editar(item.id)">
+								<td>{{item.diaSemana.nome}}</td>
+								<td>{{getTimeToShow(item.horarioAbertura)}}</td>
+								<td>{{getTimeToShow(item.horarioFechamento)}}</td>
+								<td>
+									<a data-uk-modal="{target:'#modalCadastroHorarioFuncionamento'}" title="Editar"><i class="material-icons">&#xE150;</i></a>
+									<a  title="Remover"ng-click="remover(item.id);$event.stopPropagation();"><i class="material-icons">&#xE872;</i></a>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<div class="md-fab-wrapper">
+	<a class="md-fab md-fab-ibebidas-laranja" ng-click="novo()"
+		data-uk-modal="{target:'#modalCadastroHorarioFuncionamento'}"> <i
+		class="material-icons">&#xE145;</i>
+	</a>
+</div>
+<div id="modalCadastroHorarioFuncionamento" class="uk-modal">
+	<div class="uk-modal-dialog">
+
+		<div class="uk-modal-header">
+			<h3 class="uk-modal-title">{{horarioFuncionamento.id ? 'Editar
+				Horário' : 'Cadastro de Horário'}}</h3>
+		</div>
+
+
+		<form id="form_horarioFuncionamento" class="uk-form-stacked"
+			ng-init="inicializaForm()">
+
+			<div class="uk-grid" data-uk-grid-margin>
+
+				<div class="uk-width-medium-1-1">
+					<div class="parsley-row">
+						<label for="diaSemana" class="uk-form-label">Dia da Semana<span
+							class="req">*</span>
+						</label> <input type="text" config="diaSemanaConfig"
+							options="listDiaSemana"
+							ng-model="horarioFuncionamento.diaSemana.id" name="diaSemana"
+							selectize required
+							data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}" />
+					</div>
+				</div>
+			</div>
+			<div class="uk-grid" data-uk-grid-margin>
+				<div class="uk-width-medium-1-2">
+					<div class="uk-input-group">
+						<span class="uk-input-group-addon"><i
+							class="uk-input-group-icon uk-icon-clock-o"></i></span> <label
+							for="horarioAbertura">Horário de Abertura<span
+							class="req">*</span></label> <input class="md-input" type="text"
+							id="horarioAbertura"
+							ng-model="horarioFuncionamento.horarioAbertura"
+							data-uk-timepicker md-input required
+							data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}">
+					</div>
+				</div>
+
+				<div class="uk-width-medium-1-2">
+					<div class="uk-input-group">
+						<span class="uk-input-group-addon"><i
+							class="uk-input-group-icon uk-icon-clock-o"></i></span> <label
+							for="horarioFechamento">Horário de Fechamento<span
+							class="req">*</span></label> <input class="md-input" type="text"
+							id="horarioFechamento"
+							ng-model="horarioFuncionamento.horarioFechamento"
+							data-uk-timepicker md-input required
+							data-parsley-required-message="{{MSG_PREENCHIMENTO_OBRIGATORIO}}">
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="uk-modal-footer uk-text-right">
+			<button type="button" class="md-btn md-btn-flat uk-modal-close"
+				ng-click="showForm = false">Cancelar</button>
+			<button ng-click="salvar()" type="button"
+				class="md-btn md-btn-flat md-btn-flat-primary">Confirmar</button>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,126 @@
+app.controller('ctrl_produto', function ($scope, $rootScope, $compile, $timeout,
+        $interval, genericService, DTOptionsBuilder, DTColumnDefBuilder,
+        dataTableLanguageService, commonsService, produtos, produtosParceiros) {
+
+    var ng = $scope;
+
+    $rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+
+    ng.service = new genericService("produto");
+    ng.serviceProdutoParceiro = new genericService("produtoparceiro");
+
+    ng.listProduto = produtos;
+    ng.produtosSelecionados = [];
+    ng.produtosParceiro = [];
+
+
+    ng.salvar = function () {
+        for (var i in ng.produtosSelecionados) {
+            ng.produtosParceiro.push(ng.setProdutoParceiro(ng.produtosSelecionados[i]));
+            ng.produtosSelecionados = [];
+        }
+
+        ng.serviceProdutoParceiro.salvar(ng.produtosParceiro, function (
+                response) {
+            ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+        }, function () {
+
+        });
+
+    };
+    ng.getProdutoFromPP = function () {
+        for (var i in produtosParceiros) {
+            ng.produtosSelecionados.push(produtosParceiros[i].produto);
+        }
+    };
+    ng.takeOutListProduto = function () {
+        for (var i in ng.produtosSelecionados) {
+            for (var j in ng.listProduto) {
+                if (ng.produtosSelecionados[i].id == ng.listProduto[j].id) {
+                    ng.listProduto[j] = null;
+                    break;
+                }
+                ng.listProduto = ng.listProduto.filter(Boolean);
+            }
+        }
+        ng.listProduto = ng.listProduto.filter(Boolean);
+    };
+    ng.cancelar = function () {
+    };
+
+    ng.setProdutoParceiro = function (produto) {
+        var produtoParceiro = {
+            produto: {
+                id: produto.id,
+                nome: produto.nome,
+                detalhamento: produto.detalhamento,
+                origem: {
+                    id: produto.origem.id,
+                    nome: produto.origem.nome
+                },
+                tipoCategoria: {
+                    id: produto.tipoCategoria.id,
+                    nome: produto.tipoCategoria.nome,
+                    categoria: {
+                        id: produto.tipoCategoria.categoria.id,
+                        nome: produto.tipoCategoria.categoria.nome
+                    }
+                }
+            },
+            parceiro: {
+                id: null
+            },
+            ativo: 1
+        };
+        return produtoParceiro;
+    };
+
+    ng.adicionar = function () {
+        for (var i in ng.listProduto) {
+            if (ng.listProduto[i].checked) {
+                ng.listProduto[i].checked = false;
+                ng.produtosSelecionados.push(ng.listProduto[i]);
+                ng.listProduto[i] = null;
+            }
+        }
+        ng.listProduto = ng.listProduto.filter(Boolean);
+    }
+    ng.remover = function () {
+        for (var i in ng.produtosSelecionados) {
+            if (ng.produtosSelecionados[i].checked) {
+                ng.produtosSelecionados[i].checked = false;
+                ng.listProduto.push(ng.produtosSelecionados[i]);
+                ng.produtosSelecionados[i] = null;
+            }
+        }
+        ng.produtosSelecionados = ng.produtosSelecionados.filter(Boolean);
+    }
+
+    ng.getProduto = function () {
+        ng.service.getAll(function (response) {
+            ng.listProduto = response;
+        });
+    };
+
+    ng.dtInstance = {};
+
+    ng.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+            'full_numbers').withOption('initComplete', function () {
+        $timeout(function () {
+
+            // md inputs
+            $compile($('.dt-uikit .md-input'))($scope);
+        })
+    }).withLanguage(dataTableLanguageService.portugues());
+
+    ng.dtColumnDefs = [DTColumnDefBuilder.newColumnDef(2).notSortable()];
+    ng.init = function () {
+        ng.getProdutoFromPP();
+        ng.takeOutListProduto();
+        ng.produtosSelecionados = [];
+    };
+    ng.init();
+    
+});

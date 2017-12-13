@@ -1,0 +1,223 @@
+app.controller('ctrl_produto', function ($scope, $rootScope, $compile, $timeout,
+        $interval, genericService, DTOptionsBuilder, DTColumnDefBuilder,
+        dataTableLanguageService, commonsService, produtos, produtosParceiros) {
+
+    var ng = $scope;
+
+    $rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+
+    ng.exibeListaProdutos = false;
+
+    ng.service = new genericService("produto");
+    ng.serviceProdutoParceiro = new genericService("produtoparceiro");
+
+    ng.inicializaForm = function () {
+        ng.solicitacao = {};
+        $formValidate = $('#form_solicitarProduto');
+
+        $formValidate.parsley().on('form:validated', function () {
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        }).on('field:validated', function (parsleyField) {
+            if ($(parsleyField.$element).hasClass('md-input')) {
+
+                if (!$scope.$$phase) {
+                    $scope.$apply();
+                }
+            }
+        });
+    };
+    ng.salvarSolicitacao = function () {
+        var serviceSolicitaProduto = new genericService("solicitacaoproduto");
+        if ($formValidate.parsley().validate()) {
+            serviceSolicitaProduto.salvar(ng.solicitacao, function (response) {
+                UIkit.modal("#modalSolicitaProduto").hide();
+                ng.showForm = false;
+                ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+                ng.solicitacao = {};
+            }, function () {
+
+            });
+
+        } else {
+            ng.alerta(LABEL_ATENCAO, MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS)
+        }
+    };
+    ng.filtroProdutos = function () {
+        if (ng.filter.produtos) {
+            ng.listProduto = [];
+            for (var i in ng.listProdutoBuff) {
+                //varifica se o nome e a categoria são iguais ao que foi digitado
+                if (ng.listProdutoBuff[i].nome.toLowerCase().includes(ng.filter.produtos.toLowerCase()) ||
+                        ng.listProdutoBuff[i].tipoCategoria.categoria.nome.toLowerCase().includes(ng.filter.produtos.toLowerCase()))
+                    ng.listProduto.push(ng.listProdutoBuff[i]);
+            }
+        } else {
+            ng.listProduto = ng.listProdutoBuff;
+        }
+    };
+
+    ng.mostraListaProdutos = function () {
+        ng.exibeListaProdutos = true;
+    };
+
+    ng.calculaHeigth = function () {
+
+        var altura = $("#help_content").height();
+        var val = Math.trunc(altura * 0.75);
+        return String(val + "px");
+
+    };
+    ng.filtroProdutosAdicionados = function () {
+        if (ng.filter.produtosAdicionados) {
+            ng.produtosSelecionados = [];
+            for (var i in ng.produtosSelecionadosBuff) {
+                //varifica se o nome e a categoria são iguais ao que foi digitado
+                if (ng.produtosSelecionadosBuff[i].nome.toLowerCase().includes(ng.filter.produtosAdicionados.toLowerCase()) ||
+                        ng.produtosSelecionadosBuff[i].tipoCategoria.categoria.nome.toLowerCase().includes(ng.filter.produtosAdicionados.toLowerCase()))
+                    ng.produtosSelecionados.push(ng.produtosSelecionadosBuff[i]);
+            }
+        } else {
+            ng.produtosSelecionados = ng.produtosSelecionadosBuff;
+        }
+    };
+    ng.salvar = function () {
+        for (var i in ng.produtosSelecionados) {
+            var produto = ng.produtosSelecionados[i];
+            ng.produtosParceiro.push(ng.setProdutoParceiro(produto));
+            
+        }
+        ng.produtosSelecionados = [];
+        ng.serviceProdutoParceiro.salvar(ng.produtosParceiro, function (
+                response) {
+            ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+        }, function () {
+
+        });
+
+    };
+    ng.getProdutoFromPP = function () {
+        var produtosParceiro = [];
+        for (var i in produtosParceiros) {
+            produtosParceiro.push(produtosParceiros[i].produto);
+        }
+        return produtosParceiro;
+    };
+    ng.takeOutListProduto = function (produtos) {
+        var produtosLocal = produtos;
+        var prodParceiro = ng.getProdutoFromPP();
+        for (var i in prodParceiro) {
+            for (var j in produtosLocal) {
+                if (produtosLocal[j])
+                    if (prodParceiro[i].id === produtosLocal[j].id) {
+                        produtosLocal[j] = null;
+                        break;
+                    }
+                produtosLocal = produtosLocal.filter(Boolean);
+            }
+        }
+        produtosLocal = produtosLocal.filter(Boolean);
+        return produtosLocal;
+    };
+    ng.cancelar = function () {
+    };
+
+    ng.setProdutoParceiro = function (produto) {
+        var produtoParceiro = {
+            produto: {
+                id: produto.id,
+                nome: produto.nome,
+                detalhamento: produto.detalhamento,
+                origem: {
+                    id: produto.origem.id,
+                    nome: produto.origem.nome
+                },
+                tipoCategoria: {
+                    id: produto.tipoCategoria.id,
+                    nome: produto.tipoCategoria.nome,
+                    categoria: {
+                        id: produto.tipoCategoria.categoria.id,
+                        nome: produto.tipoCategoria.categoria.nome
+                    }
+                }
+            },
+            parceiro: {
+                id: null
+            },
+            ativo: 0,
+            ativarPromocional: 0
+        };
+        return produtoParceiro;
+    };
+
+    ng.adicionar = function () {
+        for (var i in ng.listProduto) {
+            if (ng.listProduto[i].checked) {
+                ng.listProduto[i].checked = false;
+                ng.produtosSelecionados.push(ng.listProduto[i]);
+                ng.listProduto[i] = null;
+            }
+        }
+        ng.produtosSelecionadosBuff = ng.produtosSelecionados;
+        ng.listProduto = ng.listProduto.filter(Boolean);
+        ng.listProdutoBuff = ng.listProduto;
+    }
+    ng.remover = function () {
+        for (var i in ng.produtosSelecionados) {
+            if (ng.produtosSelecionados[i].checked) {
+                ng.produtosSelecionados[i].checked = false;
+                ng.listProduto.push(ng.produtosSelecionados[i]);
+                ng.produtosSelecionados[i] = null;
+            }
+        }
+        ng.produtosSelecionados = ng.produtosSelecionados.filter(Boolean);
+        ng.produtosSelecionadosBuff = ng.produtosSelecionados;
+        ng.listProdutoBuff = ng.listProduto;
+    }
+
+    ng.getProduto = function () {
+        ng.service.getAll(function (response) {
+            ng.listProduto = response;
+        });
+    };
+
+    ng.dtInstance = {};
+
+    ng.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+            'full_numbers').withOption('initComplete', function () {
+        $timeout(function () {
+
+            // md inputs
+            $compile($('.dt-uikit .md-input'))($scope);
+        })
+    }).withLanguage(dataTableLanguageService.portugues());
+
+    ng.dtColumnDefs = [DTColumnDefBuilder.newColumnDef(2).notSortable()];
+
+    ng.getVolumeEmbalagem = function (volume) {
+
+        if (volume >= 1000) {
+            volume = volume / 1000;
+            volume += " L";
+        } else
+            volume += " ml";
+
+        volume = volume.replace(".", ",");
+
+        return volume;
+    }
+
+    ng.init = function () {
+        ng.produtosSelecionados = [];
+        ng.produtosSelecionadosBuff = ng.produtosSelecionados;
+        ng.listProduto = ng.takeOutListProduto(produtos);
+        ng.listProdutoBuff = ng.listProduto;
+        ng.produtosParceiro = [];
+        ng.filter = {};
+    };
+
+    ng.init();
+});

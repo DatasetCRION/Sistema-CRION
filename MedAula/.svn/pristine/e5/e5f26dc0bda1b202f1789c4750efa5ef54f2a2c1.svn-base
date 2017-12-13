@@ -1,0 +1,14 @@
+package br.com.ibebidas.service;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.entity.Status;
+import br.com.ibebidas.entity.vo.UsuarioVO;
+import br.com.ibebidas.service.base.BaseService;
+import br.com.ibebidas.service.impl.StatusServiceImpl;
+
+@ImplementedBy(StatusServiceImpl.class)
+public interface StatusService extends BaseService<Status> {
+
+	
+}

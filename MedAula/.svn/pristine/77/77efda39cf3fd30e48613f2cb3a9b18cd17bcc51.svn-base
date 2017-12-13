@@ -1,0 +1,13 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.StatusDAOImpl;
+import br.com.ibebidas.entity.Status;
+
+@ImplementedBy(StatusDAOImpl.class)
+public interface StatusDAO extends BaseDAO<Status> {
+
+	
+}

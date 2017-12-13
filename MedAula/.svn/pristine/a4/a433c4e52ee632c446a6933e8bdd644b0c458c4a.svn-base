@@ -1,0 +1,28 @@
+package br.com.ibebidas.service.impl;
+
+import java.util.List;
+
+import com.google.inject.Inject;
+
+import br.com.ibebidas.dao.FormaPagamentoDAO;
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.entity.FormaPagamento;
+import br.com.ibebidas.service.FormaPagamentoService;
+import br.com.ibebidas.service.base.BaseServiceImpl;
+
+public class FormaPagamentoServiceImpl extends BaseServiceImpl<FormaPagamento> implements FormaPagamentoService {
+
+	@Inject private FormaPagamentoDAO dao;
+	
+	@Override
+	public BaseDAO<FormaPagamento> getDAO() {
+		// TODO Auto-generated method stub
+		return dao;
+	}
+	
+	public List<FormaPagamento> getFormaPagamento() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

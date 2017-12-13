@@ -1,0 +1,5 @@
+application.debug=false
+application.db_host=localhost
+application.db_name=ibebidas
+application.db_user=ibebidas
+application.db_pass=iBebidas@lemon

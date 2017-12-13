@@ -1,0 +1,27 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.com.ibebidas.enums;
+
+/**
+ *
+ * @author mateu
+ */
+public enum StatusPedido {
+    
+    SOLICITADO(1),
+    CONFIRMADO(2),
+    EM_ROTA(3),
+    ENTREGUE(4),
+    AVALIADO(5),
+    CANCELADO(6);
+    
+    public Integer valor;
+    
+    StatusPedido(Integer valor){
+        this.valor = valor;
+    }
+ 
+}

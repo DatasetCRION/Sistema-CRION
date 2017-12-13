@@ -1,0 +1,12 @@
+package br.com.ibebidas.dao;
+
+import com.google.inject.ImplementedBy;
+
+import br.com.ibebidas.dao.base.BaseDAO;
+import br.com.ibebidas.dao.impl.DiaSemanaDAOImpl;
+import br.com.ibebidas.entity.DiaSemana;
+
+@ImplementedBy(DiaSemanaDAOImpl.class)
+public interface DiaSemanaDAO extends BaseDAO<DiaSemana> {
+
+}

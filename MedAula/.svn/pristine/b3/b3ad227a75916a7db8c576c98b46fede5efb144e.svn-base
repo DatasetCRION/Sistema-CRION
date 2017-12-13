@@ -1,0 +1,383 @@
+app.controller('ctrl_cadastroUnidade', function ($scope, $rootScope, $compile, $timeout, unidades, franqueados, estados, modelos, $interval, genericService,
+        DTOptionsBuilder, DTColumnDefBuilder, dataTableLanguageService, commonsService, Upload) {
+
+    var ng = $scope;
+
+    $rootScope.page_full_height = true;
+    $rootScope.headerDoubleHeightActive = true;
+
+    ng.activeTabIndex = 0;
+    ng.showForm = false;
+    $formValidate = null;
+
+    ng.dtColumnDefs = [
+        DTColumnDefBuilder.newColumnDef(5).notSortable()
+    ];
+    ng.dtInstance = {};
+
+    ng.dtOptions = DTOptionsBuilder
+            .newOptions()
+            .withPaginationType('full_numbers')
+            .withOption('initComplete', function () {
+                $timeout(function () {
+
+                    // md inputs
+                    $compile($('.dt-uikit .md-input'))($scope);
+                });
+            }).withLanguage(
+            dataTableLanguageService.portugues()
+            );
+    ng.service = new genericService("unidade");
+
+    ng.listUnidades = unidades;
+    ng.listFranqueados = franqueados;
+    ng.listModelosFranquia = modelos;
+    ng.listEstados = estados;
+    ng.listCidades = [];
+    ng.file = {};
+
+    ng.$watch('unidade.endereco.uf', function (newValue) {
+
+        ng.listCidades = [];
+        if (newValue) {
+            commonsService.getCidades(newValue, function (response) {
+                ng.listCidades = response;
+            });
+        }
+    });
+
+    ng.novo = function () {
+        ng.unidade = {
+            horarioInicioSemanaDelivery: null,
+            horarioFimSemanaDelivery: null,
+            horarioInicioFdsDelivery: null,
+            horarioFimFdsDelivery: null,
+            delivery: 0
+        };
+        ng.showForm = true;
+    };
+
+    ng.franqueadoConfig = {
+        maxItems: 1,
+        placeholder: 'Selecione o Franqueado',
+        valueField: 'id',
+        labelField: 'nome',
+        searchField: 'nome'
+    };
+
+    ng.modeloConfig = {
+        maxItems: 1,
+        placeholder: 'Selecione o Modelo',
+        valueField: 'id',
+        labelField: 'nome',
+        searchField: 'nome'
+    };
+
+    ng.estadosConfig = {
+        maxItems: 1,
+        placeholder: 'Selecione o estado',
+        valueField: 'uf',
+        labelField: 'nome',
+        searchField: 'nome',
+    };
+
+    ng.cidadesConfig = {
+        create: false,
+        maxItems: 1,
+        placeholder: 'Selecione a cidade',
+        valueField: 'nome',
+        labelField: 'nome',
+        searchField: 'nome',
+    };
+
+    ng.dataContratoConfig = {
+        start: "day",
+        depth: "year",
+        culture: "pt-BR",
+    };
+
+
+    ng.preencheEndereco = function (cep) {
+        if (cep && cep.length == 8) {
+            commonsService.getEnderecoByCep(cep, function (response) {
+                if (response) {
+                    ng.unidade.endereco.logradouro = response.logradouro;
+                    ng.unidade.endereco.bairro = response.bairro;
+                    ng.unidade.endereco.uf = response.uf;
+                    ng.unidade.endereco.cidade = response.localidade;
+                }
+            });
+        }
+    };
+
+    ng.getUnidade = function () {
+        ng.service.getAll(function (response) {
+            ng.listUnidades = response;
+        });
+    };
+    ng.padronizaDateTime = function () {
+
+        if (ng.unidade.horarioInicioSemana) {
+            ng.unidade.horarioInicioSemana = ng.formataHoraSQL(ng.unidade.horarioInicioSemana);
+        }
+
+        if (ng.unidade.horarioFimSemana) {
+            ng.unidade.horarioFimSemana = ng.formataHoraSQL(ng.unidade.horarioFimSemana);
+        }
+        if (ng.unidade.horarioInicioFds) {
+            ng.unidade.horarioInicioFds = ng.formataHoraSQL(ng.unidade.horarioInicioFds);
+        }
+        if (ng.unidade.horarioFimFds) {
+            ng.unidade.horarioFimFds = ng.formataHoraSQL(ng.unidade.horarioFimFds);
+        }
+        if (ng.unidade.horarioInicioSemanaDelivery) {
+            ng.unidade.horarioInicioSemanaDelivery = ng.formataHoraSQL(ng.unidade.horarioInicioSemanaDelivery);
+        }
+        if (ng.unidade.horarioFimSemanaDelivery) {
+            ng.unidade.horarioFimSemanaDelivery = ng.formataHoraSQL(ng.unidade.horarioFimSemanaDelivery);
+        }
+        if (ng.unidade.horarioInicioFdsDelivery) {
+            ng.unidade.horarioInicioFdsDelivery = ng.formataHoraSQL(ng.unidade.horarioInicioFdsDelivery);
+        }
+        if (ng.unidade.horarioFimFdsDelivery) {
+            ng.unidade.horarioFimFdsDelivery = ng.formataHoraSQL(ng.unidade.horarioFimFdsDelivery);
+        }
+        if (ng.unidade.dataInauguracao) {
+            ng.unidade.dataInauguracao = moment(
+                    ng.unidade.dataInauguracao, DEFAULT_DATE_FORMAT);
+        }
+        if (ng.unidade.dataInicioContrato != null) {
+            ng.unidade.dataInicioContrato = moment(
+                    ng.unidade.dataInicioContrato, DEFAULT_DATE_FORMAT);
+        }
+
+        if (ng.unidade.dataInicioContrato != null) {
+            ng.unidade.dataFimContrato = moment(
+                    ng.unidade.dataFimContrato, DEFAULT_DATE_FORMAT);
+        }
+    };
+    ng.prepareDataToErr = function (data) {
+        ng.unidade.dataInauguracao = data.inauguracaoDate;
+        ng.unidade.dataInicioContrato = data.inicioDate;
+        ng.unidade.dataFimContrato = data.fimDate;
+        ng.unidade.horarioInicioSemana = data.horarioInicioSemana;
+        ng.unidade.horarioFimSemana = data.horarioFimSemana;
+        ng.unidade.horarioInicioFds = data.horarioInicioFds;
+        ng.unidade.horarioFimFds = data.horarioFimFds;
+        ng.unidade.horarioInicioSemanaDelivery = data.horarioInicioSemanaDelivery;
+        ng.unidade.horarioFimSemanaDelivery = data.horarioFimSemanaDelivery;
+        ng.unidade.horarioInicioFdsDelivery = data.horarioInicioFdsDelivery;
+        ng.unidade.horarioFimFdsDelivery = data.horarioFimFdsDelivery;
+    };
+    ng.salvar = function () {
+        var dateTime = {};
+        dateTime.inauguracaoDate = ng.unidade.dataInauguracao;
+        dateTime.inicioDate = ng.unidade.dataInicioContrato;
+        dateTime.fimDate = ng.unidade.dataFimContrato;
+        dateTime.horarioInicioSemana = ng.unidade.horarioInicioSemana;
+        dateTime.horarioFimSemana = ng.unidade.horarioFimSemana;
+        dateTime.horarioInicioFds = ng.unidade.horarioInicioFds;
+        dateTime.horarioFimFds = ng.unidade.horarioFimFds;
+        dateTime.horarioInicioSemanaDelivery = ng.unidade.horarioInicioSemanaDelivery;
+        dateTime.horarioFimSemanaDelivery = ng.unidade.horarioFimSemanaDelivery;
+        dateTime.horarioInicioFdsDelivery = ng.unidade.horarioInicioFdsDelivery;
+        dateTime.horarioFimFdsDelivery = ng.unidade.horarioFimFdsDelivery;
+
+        if (ng.unidade.dataFimContrato && ng.unidade.dataFimContrato < ng.unidade.dataInicioContrato) {
+            ng.alerta(LABEL_ERRO,
+                    "Data fim deve ser maior que data de início.");
+            ng.prepareDataToErr(dateTime);
+        } else {
+            if ($formValidate.parsley().validate()) {
+                if (ng.unidade.cnpj) {
+                    ng.padronizaDateTime();
+                    ng.service.salvar(ng.unidade, function (response) {
+                        UIkit.modal("#modalCadastroUnidade").hide();
+                        ng.showForm = false;
+                        ng.getUnidade();
+                        ng.sucesso(LABEL_SUCESSO, MSG_REGISTRO_SALVO_SUCESSO);
+
+                    }, function () {
+
+                    });
+                } else {
+                    ng.prepareDataToErr(dateTime);
+                    ng.alerta(LABEL_ATENCAO, "CNPJ Inválido");
+                }
+
+            } else {
+                ng.prepareDataToErr(dateTime);
+                ng.alerta(LABEL_ATENCAO, MSG_VERIFIQUE_CAMPOS_OBRIGATORIOS);
+            }
+        }
+    };
+    ng.cancelar = function(){
+        ng.showForm = false;
+    };
+    ng.getTime = function (time) {
+        return time.slice(0, 5);
+    };
+    ng.prepareToEdit = function () {
+        if (ng.unidade.franqueado)
+            ng.unidade.franqueado = {id: ng.unidade.franqueado.id};
+        if (ng.unidade.dataInauguracao)
+            ng.unidade.dataInauguracao = ng.formatData(new Date(ng.unidade.dataInauguracao), "DD/MM/YYYY");
+        if (ng.unidade.dataFimContrato)
+            ng.unidade.dataFimContrato = ng.formatData(new Date(ng.unidade.dataFimContrato), "DD/MM/YYYY");
+        if (ng.unidade.dataInicioContrato)
+            ng.unidade.dataInicioContrato = ng.formatData(new Date(ng.unidade.dataInicioContrato), "DD/MM/YYYY");
+        if (ng.unidade.franqueado.dataNascimento)
+            ng.unidade.franqueado.dataNascimento = ng.formatData(new Date(ng.unidade.franqueado.dataNascimento), "DD/MM/YYYY");
+        if (ng.unidade.horarioFimFds)
+            ng.unidade.horarioFimFds = ng.getTime(ng.unidade.horarioFimFds);
+        if (ng.unidade.horarioInicioFds)
+            ng.unidade.horarioInicioFds = ng.getTime(ng.unidade.horarioInicioFds);
+        if (ng.unidade.horarioFimSemana)
+            ng.unidade.horarioFimSemana = ng.getTime(ng.unidade.horarioFimSemana);
+        if (ng.unidade.horarioInicioSemana)
+            ng.unidade.horarioInicioSemana = ng.getTime(ng.unidade.horarioInicioSemana);
+        if (ng.unidade.horarioFimFdsDelivery)
+            ng.unidade.horarioFimFdsDelivery = ng.getTime(ng.unidade.horarioFimFdsDelivery);
+        if (ng.unidade.horarioInicioFdsDelivery)
+            ng.unidade.horarioInicioFdsDelivery = ng.getTime(ng.unidade.horarioInicioFdsDelivery);
+        if (ng.unidade.horarioFimSemanaDelivery)
+            ng.unidade.horarioFimSemanaDelivery = ng.getTime(ng.unidade.horarioFimSemanaDelivery);
+        if (ng.unidade.horarioInicioSemanaDelivery)
+            ng.unidade.horarioInicioSemanaDelivery = ng.getTime(ng.unidade.horarioInicioSemanaDelivery);
+    };
+    ng.editar = function (id) {
+        ng.showForm = true;
+        ng.service.get(id, function (response) {
+            ng.unidade = response;
+            ng.prepareToEdit();
+        });
+
+    };
+
+    ng.remover = function (id) {
+        ng.confirmacao(MSG_CONFIRMACAO_EXCLUSAO,
+                function () {
+                    ng.service.remover(id, function (response) {
+                        ng.sucesso(LABEL_SUCESSO, response.msg);
+                        ng.getUnidade();
+                    }, function (response) {
+                        ng.erro(LABEL_ERRO, response.msg);
+                    });
+                }
+        );
+    };
+
+    ng.inicializaForm = function () {
+        $formValidate = $('#form_unidade');
+        $formValidate
+                .parsley()
+                .on('form:validated', function () {
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                })
+                .on('field:validated', function (parsleyField) {
+                    if ($(parsleyField.$element).hasClass('md-input')) {
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                });
+    };
+    ng.showFile = function (file) {
+        var arquivo = ng.unidade[file];
+        console.log(arquivo);
+        if (arquivo) {
+            ng.file.base64 = arquivo;
+            UIkit.modal("#modalVisualizacaoDocumento").show();
+            if (arquivo.includes("image")) {
+                ng.file.pdf = false;
+                ng.file.img = true;
+            } else {
+                ng.file.pdf = true;
+                ng.file.img = false;
+            }
+        } else {
+            ng.alerta(LABEL_ATENCAO, "Arquivo não encontrado");
+        }
+        console.log();
+    };
+    ng.uploadCNPJ = function (file, errFiles) {
+        ng.errFile = errFiles && errFiles[0];
+        if (!file) {
+            ng.unidade.cartaoCnpj = {};
+            if (ng.errFile)
+                ng.erro("Erro", ng.errFile.$error == "maxSize" ? "Tamanho máximo excedido" : "Tipo de arquivo não permitido");
+            return;
+        }
+        ng.file.cartaoCnpj = file.name;
+        Upload.base64DataUrl(file).then(function (base64) {
+            ng.unidade.cartaoCnpj = base64;
+        });
+    };
+    ng.uploadFicha = function (file, errFiles) {
+        ng.errFile = errFiles && errFiles[0];
+        if (!file) {
+            ng.unidade.fichaCadastral = {};
+            if (ng.errFile)
+                ng.erro("Erro", ng.errFile.$error == "maxSize" ? "Tamanho máximo excedido" : "Tipo de arquivo não permitido");
+            return;
+        }
+        ng.file.fichaCadastral = file.name;
+        Upload.base64DataUrl(file).then(function (base64) {
+            ng.unidade.fichaCadastral = base64;
+        });
+    };
+
+    ng.uploadRecibo = function (file, errFiles) {
+        ng.errFile = errFiles && errFiles[0];
+        if (!file) {
+            ng.unidade.recibo = {};
+            if (ng.errFile)
+                ng.erro("Erro", ng.errFile.$error == "maxSize" ? "Tamanho máximo excedido" : "Tipo de arquivo não permitido");
+            return;
+        }
+        ng.file.recibo = file.name;
+        Upload.base64DataUrl(file).then(function (base64) {
+            ng.unidade.recibo = base64;
+        });
+    };
+    ng.uploadContrato = function (file, errFiles) {
+        ng.errFile = errFiles && errFiles[0];
+        if (!file) {
+            ng.unidade.contratoSocial = {};
+            if (ng.errFile)
+                ng.erro("Erro", ng.errFile.$error == "maxSize" ? "Tamanho máximo excedido" : "Tipo de arquivo não permitido");
+            return;
+        }
+        ng.file.contratoSocial = file.name;
+        Upload.base64DataUrl(file).then(function (base64) {
+            ng.unidade.contratoSocial = base64;
+        });
+    };
+    ng.inicializaForm = function () {
+        $formValidate = $('#form_unidade');
+
+        $maskedInput = $('.masked_input');
+        if ($maskedInput.length) {
+            $maskedInput.inputmask();
+        }
+
+        $formValidate
+                .parsley()
+                .on('form:validated', function () {
+                    if (!$scope.$$phase) {
+                        $scope.$apply();
+                    }
+                })
+                .on('field:validated', function (parsleyField) {
+                    if ($(parsleyField.$element).hasClass('md-input')) {
+
+                        if (!$scope.$$phase) {
+                            $scope.$apply();
+                        }
+                    }
+                });
+    };
+});

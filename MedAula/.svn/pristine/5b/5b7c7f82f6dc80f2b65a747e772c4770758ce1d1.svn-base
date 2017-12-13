@@ -1,0 +1,9 @@
+package br.com.ibebidas.dao.impl;
+
+import br.com.ibebidas.dao.EnderecoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Endereco;
+
+public class EnderecoDAOImpl extends BaseDAOImpl<Endereco> implements EnderecoDAO{
+
+}

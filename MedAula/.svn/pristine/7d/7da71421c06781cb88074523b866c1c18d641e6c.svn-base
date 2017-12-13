@@ -1,0 +1,9 @@
+package br.com.ibebidas.dao.impl;
+
+import br.com.ibebidas.dao.HorarioFuncionamentoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.HorarioFuncionamento;
+
+public class HorarioFuncionamentoDAOImpl extends BaseDAOImpl<HorarioFuncionamento> implements HorarioFuncionamentoDAO{
+
+}

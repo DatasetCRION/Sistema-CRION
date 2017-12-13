@@ -1,0 +1,9 @@
+package br.com.ibebidas.dao.impl;
+
+import br.com.ibebidas.dao.PrecoDAO;
+import br.com.ibebidas.dao.base.BaseDAOImpl;
+import br.com.ibebidas.entity.Preco;
+
+public class PrecoDAOImpl extends BaseDAOImpl<Preco> implements PrecoDAO{
+
+}
